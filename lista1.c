@@ -79,6 +79,7 @@ void ex_4(char *filename) {
 int _fibonacci(int n) {
   switch (n) {
     case 0:
+      return 0;
     case 1:
       return 1;
     default:
@@ -86,18 +87,13 @@ int _fibonacci(int n) {
   }
 }
 
-// note that the example from says fib(6) is 8, but it isn't
-// fib(0) = fib(1) = 1, thus fib(6) is 13.
-// if that definition is desired, it is a matter of calling
-// _fibonacci(n - 1) instead.
 void ex_5(int n) {
   printf("%d\n", _fibonacci(n));
 }
 
 void ex_6(int n) {
-  int a=1, b=1, i;
+  int a=0, b=1, c, i;
   for (i = 0; i < n; ++i) {
-    int c;
     c = a;
     a += b;
     b = c;
@@ -138,29 +134,55 @@ void ex_7(int n) {
 
 int main(int argv, char **args) {
   if (argv > 1) {
-    int n = atoi(args[1]);
+    int k = atoi(args[1]);
+    switch (k) {
+      case 1:
+      case 2:
+        if (argv < 3) {
+          fprintf(stderr, "One more argument needed: n.\n");
+          return 1;
+        } else {
+          int n = atoi(args[2]);
+          k == 1? ex_1(n) : ex_2(n);
+        }
+        break;
 
-    printf("exercicio 1\n");
-    ex_1(n);
+      case 3:
+      case 4:
+        if (argv < 3) {
+          fprintf(stderr, "One more argument needed: filename.\n");
+          return 1;
+        } else {
+          char *filename = args[2];
+          k == 3? ex_3(filename) : ex_4(filename);
+        }
+        break;
 
-    printf("exercicio 2\n");
-    ex_2(n);
+      case 5:
+      case 6:
+        if (argv < 3) {
+          fprintf(stderr, "One more argument needed: n.\n");
+          return 1;
+        } else {
+          int n = atoi(args[2]);
+          k == 5? ex_5(n) : ex_6(n);
+        }
+        break;
 
-    printf("exercicio 3\n");
-    ex_3("file.txt");
+      case 7:
+        if (argv < 3) {
+          fprintf(stderr, "One more argument needed: n.\n");
+          return 1;
+        } else {
+          int n = atoi(args[2]);
+          ex_7(n);
+        }
+        break;
 
-    printf("exercicio 4\n");
-    ex_4("notas.txt");
-
-    printf("exercicio 5\n");
-    ex_5(n);
-
-    printf("exercicio 6\n");
-    ex_6(n);
-
-    printf("exercicio 7\n");
-    ex_7(n);
-
+      default:
+        fprintf(stderr, "Unavailable!\n");
+        return 1;
+    }
     return 0;
   } else {
     fprintf(stderr, "Needs at least one argument\n");
