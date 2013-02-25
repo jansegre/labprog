@@ -18,7 +18,7 @@ double average(int n, double *vec) {
 
 int main(int argv, char **args) {
   int buff_len = INIT_BUFF_LEN, n = 0;
-  double *grades;
+  double *grades, avg;
   FILE *f = stdin;
 
   // Let's be nice and allow passing a file through command line
@@ -55,8 +55,12 @@ int main(int argv, char **args) {
     }
   }
 
+  // Calculate average and free as soon as possible
+  avg = average(n, grades);
+  free(grades);
+
   // Finally we print the average when input has finished
   // and return with no error
-  fprintf(stdout, OUTPUT_FORMAT, average(n, grades));
+  fprintf(stdout, OUTPUT_FORMAT, avg);
   return 0;
 }
