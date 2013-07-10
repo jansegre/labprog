@@ -13,3 +13,12 @@ Comentários
 ===========
 
 Em `modelo` leia-se `template`.
+
+Ao compilar com o clang se o termo `viete<n>::r` não for chamado explicitamente
+ele irá inferir o valor 0 ao calcular o `viete<n>::v` mesmo que esse referencie
+o primeiro. Tal anomalia não ocorre ao compilar com o gcc, não foram testados
+outros compiladores.
+
+Note também que o método adotado (fazer com que o compilador faça a conta) implica
+num limite do i, no caso do clang por padrão a profundidade da recursão pode ir até
+512 níveis, no caso do gcc 4.8 a recursão por padrão pode ir até 900 níveis.
