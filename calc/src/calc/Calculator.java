@@ -37,73 +37,64 @@ public class Calculator {
     // from the stack is forwarded
 
     public void sum() {
-        Double y = (Double) stack.pop();
-        Double x = (Double) stack.pop();
+        Double y = stack.pop();
+        Double x = stack.pop();
         stack.push(x + y);
     }
 
     public void subtract() {
-        Double x, y;
-        y = stack.pop();
-        x = stack.pop();
+        Double y = stack.pop();
+        Double x = stack.pop();
         stack.push(x - y);
     }
 
     public void multiply() {
-        Double x, y;
-        y = stack.pop();
-        x = stack.pop();
+        Double y = stack.pop();
+        Double x = stack.pop();
         stack.push(x * y);
     }
 
     public void divide() {
-        Double x, y;
-        y = stack.pop();
-        x = stack.pop();
+        Double y = stack.pop();
+        Double x = stack.pop();
         stack.push(x / y);
     }
 
     public void power() {
-        Double x, y;
-        y = stack.pop();
-        x = stack.pop();
+        Double y = stack.pop();
+        Double x = stack.pop();
         stack.push(Math.pow(x, y));
     }
 
     public void root() {
-        Double x, y;
-        y = stack.pop();
-        x = stack.pop();
+        Double y = stack.pop();
+        Double x = stack.pop();
         stack.push(Math.pow(x, 1.0 / y));
     }
 
     public void inverse() {
-        Double x;
+        Double x = stack.pop();
         x = stack.pop();
         stack.push(1.0 / x);
     }
 
     public void sqrt() {
-        Double x;
-        x = stack.pop();
+        Double x = stack.pop();
         stack.push(Math.sqrt(x));
     }
 
     public void cos() {
-        Double x;
-        x = stack.pop();
+        Double x = stack.pop();
         stack.push(Math.cos(x));
     }
 
     public void sin() {
-        Double x;
-        x = stack.pop();
+        Double x = stack.pop();
         stack.push(Math.sin(x));
     }
 
     public void tan() {
-        Double x;
-        x = stack.pop();
+        Double x = stack.pop();
         stack.push(Math.tan(x));
     }
 }
