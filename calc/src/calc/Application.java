@@ -3,13 +3,24 @@ import java.io.*;
 import java.util.EmptyStackException;
 
 public class Application {
+    // IOException may be thrown by BufferedReader and is left untreated
+    // as such it has to be explicit after main signature
     public static void main(String[] args) throws IOException {
+        // one calculator is instantiated and used all along this app
         Calculator calc = new Calculator();
+        // as well as a single bufferedreader to read lines from stdin
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        // since a break inside the switch will not break the while loop
+        // we use a boolean flag to indicate whether we should terminate de main loop or not
         boolean quit = false;
         while(!quit) {
+            // the main loop consists basically of this steps:
+            // read input from the user (read with a nice > promtp)
             System.out.print("> ");
             String input = br.readLine();
+            // enclosed with a try to catch common exceptions such as empty stack or
+            // illegal numbers (division by zero for instance), opposed to using one
+            // try catch for every operation that may throw an exception
             try {
                 switch(input) {
                     case "del":
@@ -83,6 +94,9 @@ public class Application {
                         System.out.println("quitting... bye!");
                         break;
                     default:
+                        // every input that is not an explicit command
+                        // is either a number to enter the stack
+                        // or a misstyped/unkown command
                         try {
                             calc.push(Double.parseDouble(input));
                         } catch (NumberFormatException nfe) {
@@ -95,6 +109,8 @@ public class Application {
             } catch (IllegalArgumentException iae) {
                 System.out.println(iae.getMessage());
             }
+            // after processing the input, print a separator followed by
+            // a snapshot of the current calculator stack
             System.out.println("---");
             System.out.print(calc.toString());
         }
