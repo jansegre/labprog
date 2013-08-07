@@ -1,4 +1,5 @@
 package calc;
+import java.math.BigInteger;
 import java.util.Stack;
 
 public class Calculator {
@@ -25,6 +26,14 @@ public class Calculator {
 
     public Stack<Double> getStack() {
         return stack;
+    }
+
+    public String toString() {
+        String out = new String();
+        for(Double x : stack) {
+            out += x.toString() + "\n";
+        }
+        return out;
     }
 
     // Operations
@@ -54,9 +63,19 @@ public class Calculator {
         stack.push(x * y);
     }
 
-    public void divide() {
+    // this operation hast the restriction of now allowing division
+    // by zero, as such it will throw IllegalArgumentException, even
+    // though it's not an argument, but from the point of view of the
+    // calculator it could be considered as such, this was made for the
+    // sake of simplicity so an exception class need not to be created
+    public void divide() throws IllegalArgumentException {
         Double y = stack.pop();
         Double x = stack.pop();
+        if (y == 0.0) {
+            stack.push(x);
+            stack.push(y);
+            throw new IllegalArgumentException("division by zero not allowed");
+        }
         stack.push(x / y);
     }
 
@@ -96,5 +115,45 @@ public class Calculator {
     public void tan() {
         Double x = stack.pop();
         stack.push(Math.tan(x));
+    }
+
+    public void cosh() {
+        Double x = stack.pop();
+        stack.push(Math.cosh(x));
+    }
+
+    public void sinh() {
+        Double x = stack.pop();
+        stack.push(Math.sinh(x));
+    }
+
+    public void log() {
+        Double x = stack.pop();
+        stack.push(Math.log(x));
+    }
+
+    public void log10() {
+        Double x = stack.pop();
+        stack.push(Math.log10(x));
+    }
+
+    // similarly to divide(), this function throws IllegalArgumentException,
+    // this time is when the last number on the stack is not exactly an integer
+    public void factorial() throws IllegalArgumentException {
+        Double x = stack.pop();
+        if (x != Math.floor(x)) {
+            stack.push(x);
+            throw new IllegalArgumentException("the given number is not an integer");
+        }
+        BigInteger i = _factorial(x.intValue());
+        stack.push(i.doubleValue());
+    }
+
+    private BigInteger _factorial(Integer n) {
+        BigInteger out = new BigInteger("1");
+        for (Integer i = 2; i <= n; i++) {
+            out = out.multiply(new BigInteger(i.toString()));
+        }
+        return out;
     }
 }
