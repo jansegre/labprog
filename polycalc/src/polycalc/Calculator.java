@@ -90,8 +90,10 @@ public class Calculator {
 
     public void power() {
         Polynomial y = stack.pop();
+        if (y.degree() != 0 || y.leadCoefficient() != Math.floor(y.leadCoefficient()))
+            throw new IllegalArgumentException("power must be an integer scalar");
         Polynomial x = stack.pop();
-        //TODO
-        //stack.push(x.power(y));
+        int power = y.leadCoefficient().intValue();
+        stack.push(x.power(power));
     }
 }

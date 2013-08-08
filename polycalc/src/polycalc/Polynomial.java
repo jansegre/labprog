@@ -192,7 +192,7 @@ public class Polynomial {
 
     // implemented as kindly suggested on wikipedia:
     // http://en.wikipedia.org/wiki/Polynomial_long_division#Pseudo-code
-    public Polynomial divide(Polynomial divisor) {
+    public Polynomial divide(Polynomial divisor) throws IllegalArgumentException {
         if (divisor.degree() == null)
             throw new IllegalArgumentException("division by null polynomial cannot occur");
         Polynomial quotient = new Polynomial();
@@ -207,8 +207,13 @@ public class Polynomial {
         return quotient;
     }
 
-    public Polynomial power(int i) {
-        //TODO
-        return this;
+    // to the n-th power, that is: this^n
+    public Polynomial power(int n) throws IllegalArgumentException {
+        if (n < 1)
+            throw new IllegalArgumentException("cannot operate powers lower than 1");
+        Polynomial p = this;
+        for (int i = 1; i < n; i++)
+            p = p.multiply(p);
+        return p;
     }
 }
