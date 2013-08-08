@@ -69,8 +69,7 @@ public class Application {
                     case "quit":
                         quit = true;
                         System.out.println("quitting... bye!");
-                        System.exit(0);
-                        break;
+                        return;
                     default:
                         // every input that is not an explicit command
                         // is either a number to enter the stack

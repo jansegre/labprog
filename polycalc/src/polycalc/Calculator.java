@@ -25,7 +25,7 @@ public class Calculator {
     }
 
     public String toString() {
-        String out = new String();
+        String out = "";
         for(Polynomial p : stack) {
             out += p.toString() + "\n";
         }

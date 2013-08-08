@@ -2,7 +2,6 @@ package polycalc;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -12,8 +11,8 @@ public class Polynomial {
 
     // the main constructor is to save the given array as the coefficients
     // in which the index must match the power
-    public Polynomial(Double[] coefs) {
-        this.coefs = reduced(coefs);
+    public Polynomial(Double[] coefficients) {
+        this.coefs = reduced(coefficients);
     }
 
     // a copy constructor, to allow duplication of polynomials
@@ -89,7 +88,7 @@ public class Polynomial {
         if (coefs.length == 0) {
             return "0.0";
         } else {
-            String out = new String();
+            String out = "";
             // show the first term, no power of x here, since it's x0
             if (coefs[0] != 0.0)
                 out += coefs[0] + " ";
@@ -145,6 +144,7 @@ public class Polynomial {
         return new Polynomial(reduced(coefs));
     }
 
+    // return a polynomial with each coefficient negated
     public Polynomial negative() {
         Double[] ncoefs = coefs.clone();
         for (int i = 0; i < ncoefs.length; i++)
@@ -152,13 +152,29 @@ public class Polynomial {
         return new Polynomial(ncoefs);
     }
 
+    // return the subtraction of other from this, that is (this - other)
     public Polynomial subtract(Polynomial other) {
         return sum(other.negative());
     }
 
     public Polynomial multiply(Polynomial other) {
-        //TODO
-        return this;
+        // the new degree will always be the sum of the multiplicands degrees
+        Double[] out_coefs = new Double[getDegree() + other.getDegree() + 1];
+        // for each coefficient of the new polynomial of power "i"
+        for (int i = 0; i < out_coefs.length; i++) {
+            out_coefs[i] = 0.0;
+            // its value will be the sum of the products
+            // of all coefficients of which the sum of the powers is "i"
+            for (int j = 0; j <= i; j++) {
+                // it may be that we don't have both coefficients, in that case
+                // whenever the desired coefficient is out of reach we use 0.0 instead
+                Double a = j < other.coefs.length ? other.coefs[j] : 0.0;
+                Double b = (i - j) < coefs.length ? coefs[i - j] : 0.0;
+                out_coefs[i] += a * b;
+            }
+        }
+        // no need to reduce it, the first term will never be zero
+        return new Polynomial(out_coefs);
     }
 
     public Polynomial divide(Polynomial other) {
