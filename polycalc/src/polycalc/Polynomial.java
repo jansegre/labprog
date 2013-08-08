@@ -6,12 +6,13 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Polynomial {
-    private Double[] coefs;
+    private final double[] coefs;
+    private static final double[] null_coefs = new double[0];
     private static Pattern term_pattern = Pattern.compile("(.*)\\*?x(?:\\^|\\*\\*)?(.*)");
 
     // the main constructor is to save the given array as the coefficients
     // in which the index must match the power
-    public Polynomial(Double[] coefficients) {
+    public Polynomial(double[] coefficients) {
         this.coefs = reduced(coefficients);
     }
 
@@ -20,14 +21,23 @@ public class Polynomial {
         this.coefs = other.coefs.clone();
     }
 
+    // the default arguments will yield a null degree polynomial
+    public Polynomial() {
+        coefs = null_coefs;
+    }
+
     // the degree, for example, "1 + 2x + x^2" has order 2
     // on our definition, a null polynomial has null degree
-    public Integer getDegree() {
+    public Integer degree() {
         return coefs.length == 0 ? null : coefs.length - 1;
     }
 
-    public Double getCoefficient(int i) {
+    public Double coefficient(int i) {
         return coefs[i];
+    }
+
+    public Double leadCoefficient() {
+        return coefficient(degree());
     }
 
     // this method will parse a string like "2x1 + 2x4 + 5" to the corresponding
@@ -71,12 +81,12 @@ public class Polynomial {
         }
 
         // allocate a polynomial with the highest order needed
-        Double[] coefs = new Double[max_order + 1];
+        double[] coefs = new double[max_order + 1];
         // and populate it with found coefficients, terms not present
         // on our map we allocate a zero for it
         for (int i = 0; i <= max_order; i++) {
             Double term = terms.get(i);
-            coefs[i] = term == null ? new Double(0.0) : term;
+            coefs[i] = term == null ? 0.0 : term;
         }
 
         return new Polynomial(coefs);
@@ -113,7 +123,7 @@ public class Polynomial {
     }
 
     // this will return a list with all trailing zeros removed
-    private static Double[] reduced(Double[] list) {
+    private static double[] reduced(double[] list) {
         int zeros = 0;
         for (int i = list.length - 1; i >= 0; i--)
             if (list[i] == 0.0)
@@ -122,7 +132,7 @@ public class Polynomial {
                 break;
         if (zeros > 0) {
             int new_size = list.length - zeros;
-            Double[] new_list = new Double[new_size];
+            double[] new_list = new double[new_size];
             System.arraycopy(list, 0, new_list, 0, new_size);
             return new_list;
         } else {
@@ -131,7 +141,7 @@ public class Polynomial {
     }
 
     public Polynomial sum(Polynomial other) {
-        Double[] coefs, shorter;
+        double[] coefs, shorter;
         if (other.coefs.length > this.coefs.length) {
             shorter = this.coefs;
             coefs = other.coefs.clone();
@@ -145,11 +155,15 @@ public class Polynomial {
     }
 
     // return a polynomial with each coefficient negated
-    public Polynomial negative() {
-        Double[] ncoefs = coefs.clone();
+    public Polynomial multiply(Double scalar) {
+        double[] ncoefs = coefs.clone();
         for (int i = 0; i < ncoefs.length; i++)
-            ncoefs[i] *= -1;
+            ncoefs[i] *= scalar;
         return new Polynomial(ncoefs);
+    }
+
+    public Polynomial negative() {
+        return multiply(-1.0);
     }
 
     // return the subtraction of other from this, that is (this - other)
@@ -159,17 +173,16 @@ public class Polynomial {
 
     public Polynomial multiply(Polynomial other) {
         // the new degree will always be the sum of the multiplicands degrees
-        Double[] out_coefs = new Double[getDegree() + other.getDegree() + 1];
+        double[] out_coefs = new double[degree() + other.degree() + 1];
         // for each coefficient of the new polynomial of power "i"
         for (int i = 0; i < out_coefs.length; i++) {
-            out_coefs[i] = 0.0;
             // its value will be the sum of the products
             // of all coefficients of which the sum of the powers is "i"
             for (int j = 0; j <= i; j++) {
                 // it may be that we don't have both coefficients, in that case
                 // whenever the desired coefficient is out of reach we use 0.0 instead
-                Double a = j < other.coefs.length ? other.coefs[j] : 0.0;
-                Double b = (i - j) < coefs.length ? coefs[i - j] : 0.0;
+                Double a = j <= other.degree() ? other.coefs[j] : 0.0;
+                Double b = (i - j) <= degree() ? coefs[i - j] : 0.0;
                 out_coefs[i] += a * b;
             }
         }
@@ -177,9 +190,21 @@ public class Polynomial {
         return new Polynomial(out_coefs);
     }
 
-    public Polynomial divide(Polynomial other) {
-        //TODO
-        return this;
+    // implemented as kindly suggested on wikipedia:
+    // http://en.wikipedia.org/wiki/Polynomial_long_division#Pseudo-code
+    public Polynomial divide(Polynomial divisor) {
+        if (divisor.degree() == null)
+            throw new IllegalArgumentException("division by null polynomial cannot occur");
+        Polynomial quotient = new Polynomial();
+        Polynomial rest = this;
+        while (rest.degree() != null && rest.degree() >= divisor.degree()) {
+            double[] terms = new double[rest.degree() - divisor.degree() + 1];
+            terms[terms.length - 1] = rest.leadCoefficient() / divisor.leadCoefficient();
+            Polynomial t = new Polynomial(terms);
+            quotient = quotient.sum(t);
+            rest = rest.subtract(divisor.multiply(t));
+        }
+        return quotient;
     }
 
     public Polynomial power(int i) {
