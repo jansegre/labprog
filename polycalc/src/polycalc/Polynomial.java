@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
 public class Polynomial {
     private final double[] coefs;
     private static final double[] null_coefs = new double[0];
-    private static Pattern term_pattern = Pattern.compile("(.*)\\*?x(?:\\^|\\*\\*)?(.*)");
+    private static final Pattern term_pattern = Pattern.compile("(.*)\\*?x(?:\\^|\\*\\*)?(.*)");
 
     // the main constructor is to save the given array as the coefficients
     // in which the index must match the power
@@ -141,17 +141,17 @@ public class Polynomial {
     }
 
     public Polynomial sum(Polynomial other) {
-        double[] coefs, shorter;
-        if (other.coefs.length > this.coefs.length) {
-            shorter = this.coefs;
-            coefs = other.coefs.clone();
-        } else {
+        double[] sum_coefs, shorter;
+        if (coefs.length > other.coefs.length) {
             shorter = other.coefs;
-            coefs = this.coefs.clone();
+            sum_coefs = this.coefs.clone();
+        } else {
+            shorter = this.coefs;
+            sum_coefs = other.coefs.clone();
         }
         for (int i = 0; i < shorter.length; i++)
-            coefs[i] += shorter[i];
-        return new Polynomial(reduced(coefs));
+            sum_coefs[i] += shorter[i];
+        return new Polynomial(reduced(sum_coefs));
     }
 
     // return a polynomial with each coefficient negated
@@ -181,8 +181,8 @@ public class Polynomial {
             for (int j = 0; j <= i; j++) {
                 // it may be that we don't have both coefficients, in that case
                 // whenever the desired coefficient is out of reach we use 0.0 instead
-                Double a = j <= other.degree() ? other.coefs[j] : 0.0;
-                Double b = (i - j) <= degree() ? coefs[i - j] : 0.0;
+                Double a = j <= other.degree() ? other.coefficient(j) : 0.0;
+                Double b = (i - j) <= degree() ? coefficient(i - j) : 0.0;
                 out_coefs[i] += a * b;
             }
         }

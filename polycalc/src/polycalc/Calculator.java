@@ -4,6 +4,7 @@ import java.util.Stack;
 
 public class Calculator {
     private Stack<Polynomial> stack;
+    private static final String NEW_LINE = System.getProperty("line.separator");
 
     public Calculator() {
         stack = new Stack<>();
@@ -27,7 +28,7 @@ public class Calculator {
     public String toString() {
         String out = "";
         for(Polynomial p : stack) {
-            out += p.toString() + "\n";
+            out += p.toString() + NEW_LINE;
         }
         return out;
     }
@@ -77,14 +78,9 @@ public class Calculator {
     // though it's not an argument, but from the point of view of the
     // calculator it could be considered as such, this was made for the
     // sake of simplicity so an exception class need not to be created
-    public void divide() throws IllegalArgumentException {
+    public void divide() {
         Polynomial y = stack.pop();
         Polynomial x = stack.pop();
-//        if (y == 0.0) {
-//            stack.push(x);
-//            stack.push(y);
-//            throw new IllegalArgumentException("division by zero not allowed");
-//        }
         stack.push(x.divide(y));
     }
 
