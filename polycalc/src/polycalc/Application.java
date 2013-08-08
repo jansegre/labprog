@@ -23,10 +23,21 @@ public class Application {
             // try catch for every operation that may throw an exception
             try {
                 switch(input) {
+                    case "":
+                        break;
                     case "del":
                     case "drop":
                     case "pop":
                         calc.pop();
+                        break;
+                    case ".":
+                    case "dup":
+                    case "duplicate":
+                        calc.duplicate();
+                        break;
+                    case "?":
+                    case "swap":
+                        calc.swap();
                         break;
                     case "+":
                     case "plus":

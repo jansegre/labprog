@@ -41,6 +41,19 @@ public class Calculator {
     // if there are not enough numbers the exception
     // from the stack is forwarded
 
+    public void duplicate() {
+        Polynomial p = stack.pop();
+        stack.push(p);
+        stack.push(new Polynomial(p));
+    }
+
+    public void swap() {
+        Polynomial y = stack.pop();
+        Polynomial x = stack.pop();
+        stack.push(y);
+        stack.push(x);
+    }
+
     public void sum() {
         Polynomial y = stack.pop();
         Polynomial x = stack.pop();
