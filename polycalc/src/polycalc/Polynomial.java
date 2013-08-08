@@ -208,12 +208,15 @@ public class Polynomial {
     }
 
     // to the n-th power, that is: this^n
+    // optimized powering by squaring [reduced from O(n) to O(log(n))]
+    // http://en.wikipedia.org/wiki/Exponentiation_by_squaring#Basic_method
     public Polynomial power(int n) throws IllegalArgumentException {
         if (n < 1)
             throw new IllegalArgumentException("cannot operate powers lower than 1");
-        Polynomial p = this;
-        for (int i = 1; i < n; i++)
-            p = p.multiply(p);
-        return p;
+        if (n == 1)
+            return this;
+        Polynomial partial = power(n / 2);
+        Polynomial squared = partial.multiply(partial);
+        return n % 2 == 0 ? squared : squared.multiply(this);
     }
 }
