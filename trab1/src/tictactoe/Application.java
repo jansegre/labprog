@@ -47,11 +47,15 @@ public class Application {
                     while (!valid_input) {
                         System.out.print("move: ");
                         input = br.readLine();
+                        if (input == "q") {
+                            System.out.println("quitting... bye!");
+                            return;
+                        }
                         String[] ints = input.split("[\\s,;]+");
                         if (ints.length == 2) {
                             try {
-                                i = Integer.parseInt(ints[0]);
-                                j = Integer.parseInt(ints[1]);
+                                j = Integer.parseInt(ints[0]);
+                                i = Integer.parseInt(ints[1]);
                                 valid_input = true;
                             } catch (NumberFormatException nfe) {
                                 System.out.println("could not parse the entered number");
@@ -67,11 +71,13 @@ public class Application {
                             valid_move = false;
                             break;
                         case VICTORY:
+                            System.out.print(game.toString());
                             String symbol = player == TicTacToe.Type.PLAYER1 ? "X" : "O";
                             System.out.println("congratulations, '" + symbol + "' won!");
                             game_over = true;
                             break;
                         case TIE:
+                            System.out.print(game.toString());
                             System.out.println("tie game!");
                             game_over = true;
                             break;

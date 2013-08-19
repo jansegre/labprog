@@ -71,11 +71,11 @@ public class Calculator {
     public void divide() throws IllegalArgumentException {
         Double y = stack.pop();
         Double x = stack.pop();
-        if (y == 0.0) {
+        /*if (y == 0.0) {
             stack.push(x);
             stack.push(y);
             throw new IllegalArgumentException("division by zero not allowed");
-        }
+        }*/
         stack.push(x / y);
     }
 
