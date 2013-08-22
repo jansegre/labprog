@@ -22,7 +22,7 @@ public class Decompressor {
             int frequency = dataInputStream.readInt();
             if (frequency == 0) break;
             byte symbol = dataInputStream.readByte();
-            nodes.push(new HuffmanNode<Byte>(frequency, symbol));
+            nodes.push(new HuffmanNode<>(frequency, symbol));
         }
         tree = new HuffmanTree.ByteHuffmanTree(nodes);
     }

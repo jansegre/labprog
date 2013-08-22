@@ -112,7 +112,7 @@ public class HuffmanTree<S> implements Iterable<HuffmanNode<S>> {
                 int frequency = buffer.getInt();
                 if (frequency == 0) break;
                 byte symbol = buffer.get();
-                nodes.push(new HuffmanNode<Byte>(frequency, symbol));
+                nodes.push(new HuffmanNode<>(frequency, symbol));
             }
             return nodes;
         }

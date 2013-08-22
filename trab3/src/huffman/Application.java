@@ -5,16 +5,16 @@ import java.util.Scanner;
 import java.util.Vector;
 
 public class Application {
-    static Scanner scanner;
-    static ByteArrayOutputStream buffer;
-    static Decompressor decompressor;
-    static Compressor compressor;
+    protected Scanner scanner;
+    protected ByteArrayOutputStream buffer;
+    protected Decompressor decompressor;
+    protected Compressor compressor;
 
-    static String input() {
+    String input() {
         return scanner.next();
     }
 
-    static FileInputStream openInputFile(String fileName) {
+    FileInputStream openInputFile(String fileName) {
         try {
             return new FileInputStream(fileName);
         } catch (FileNotFoundException e) {
@@ -24,7 +24,7 @@ public class Application {
         }
     }
 
-    static FileOutputStream openOutputFile(String fileName) {
+    FileOutputStream openOutputFile(String fileName) {
         try {
             return new FileOutputStream(fileName);
         } catch (FileNotFoundException e) {
@@ -34,7 +34,7 @@ public class Application {
         }
     }
 
-    static String pathToString(Vector<Boolean> path) {
+    String pathToString(Vector<Boolean> path) {
         String out = "";
         if (path == null) {
             System.err.println("null path found");
@@ -45,36 +45,36 @@ public class Application {
         return out;
     }
 
-    static String codeBook(HuffmanTree<Byte> tree) {
+    String codeBook(HuffmanTree<Byte> tree) {
         String out = "";
         for (byte s: tree.getSymbols())
             out += byteToString(s) + ": " + pathToString(tree.pathFor(s)) + '\n';
         return out;
     }
 
-    static String byteToString(byte b) {
+    String byteToString(byte b) {
         String out = "";
         for (int i = 1 << 7; i != 0; i >>= 1)
             out += ((int)b & i) == i? "1" : "0";
         return out;
     }
 
-    static String bitString(String input) {
+    String bitString(String input) {
         return bitString(input.getBytes());
     }
 
-    static String bitString(byte[] bytes) {
+    String bitString(byte[] bytes) {
         String out = "";
         for (byte b: bytes)
             out += byteToString(b);
         return out;
     }
 
-    static String colonify(String input) {
+    String colonify(String input) {
         return colonify(input, 16);
     }
 
-    static String colonify(String input, int lineBreak) {
+    String colonify(String input, int lineBreak) {
         // the following is merely to place ';' every 8 bits so we can better distinguish bytes
         // we could return out if we want the plain string of bits
         String out = "";
@@ -96,7 +96,7 @@ public class Application {
         return out;
     }
 
-    static String dummyCompress(String input) throws IOException {
+    String dummyCompress(String input) throws IOException {
         // analyze the byte frequency to build the tree
         FrequencyAnalyzer<Byte> analyzer = new FrequencyAnalyzer.ByteFrequencyAnalyzer();
         // feed bytes into the analyzer
@@ -115,7 +115,7 @@ public class Application {
         return out;
     }
 
-    static String betterCompress(String input) throws IOException {
+    String betterCompress(String input) throws IOException {
         // analyze the byte frequency to build the tree
         FrequencyAnalyzer<Byte> analyzer = new FrequencyAnalyzer.ByteFrequencyAnalyzer();
         // feed bytes into the analyzer
@@ -144,7 +144,7 @@ public class Application {
         return out;
     }
 
-    static void interactiveConsole() throws IOException {
+    void interactiveConsole() throws IOException {
         String test = "j'aime aller sur le bord de l'eau les jeudis ou les jours impairs";
         //String test = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. " +
         //        "Integer nunc lectus, tincidunt vitae porttitor at, fermentum id erat.";
@@ -266,7 +266,7 @@ public class Application {
         }
     }
 
-    static void showUsage() {
+    void showUsage() {
         System.out.println(
                 "usage:\n" +
                 "interactive: java -jar dist/huffman.jar\n" +
@@ -274,7 +274,7 @@ public class Application {
                 "decompress:  java -jar dist/huffman.jar -d file.txt.hz file2.txt");
     }
 
-    static void handleArguments(String[] args) {
+    void handleArguments(String[] args) {
         if (args.length != 3) {
             showUsage();
         } else {
@@ -320,9 +320,7 @@ public class Application {
         }
     }
 
-    // IOException may be thrown by BufferedReader and is left untreated
-    // as such it has to be explicit after main signature
-    public static void main(String[] args) throws IOException {
+    public Application() {
         // as well as a single BufferedReader to read lines from stdin
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         scanner = new Scanner(reader);
@@ -339,11 +337,16 @@ public class Application {
 
         compressor = null;
         decompressor = null;
+    }
 
+    // IOException may be thrown by BufferedReader and is left untreated
+    // as such it has to be explicit after main signature
+    public static void main(String[] args) throws IOException {
+        Application app = new Application();
         if (args.length > 0) {
-            handleArguments(args);
+            app.handleArguments(args);
         } else {
-            interactiveConsole();
+            app.interactiveConsole();
         }
     }
 }
