@@ -28,7 +28,7 @@ Para um `arquivo.txt` com conteúdo:
 
     Lorem ipsum dolor sit amet, consectetur adipiscing elit.
 
-Comprimir um arquivo e ver a árvore gerada.
+Comprimir o `arquivo.txt` e ver a árvore gerada.
 
     java -jar dist/huffman.jar
     > compress arquivo.txt arquivo.txt.hz
@@ -58,7 +58,7 @@ Comprimir um arquivo e ver a árvore gerada.
     > q
     quiting... bye!
 
-Descomprimir o arquivo anterior para a memória, cuidado ao fazer
+Descomprimir o `arquivo.txt.hz` anterior para a memória, cuidado ao fazer
 isso com arquivos binários, nem todos os bytes são caractéres amigáveis.
 
     java -jar dist/huffman.jar
