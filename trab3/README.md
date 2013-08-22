@@ -16,11 +16,13 @@ Também existe um modo iterativo para testes.
 
 ### Comprimindo um arquivo
 
-    java -jar dist/huffman.jar -c arquivo.txt arquivo.txt.hz
+    $ java -jar dist/huffman.jar -c arquivo.txt arquivo.txt.hz
+    compressing 'arquivo.tzt' to 'arquivo.txt.hz'... ok
 
 ### Descomprimindo um arquivo
 
-    java -jar dist/huffman.jar -d arquivo.txt.hz arquivo2.txt
+    $ java -jar dist/huffman.jar -d arquivo.txt.hz arquivo2.txt
+    decompressing 'arquivo.tzt.hz' to 'arquivo2.txt'... ok
 
 ### Modo iterativo
 
@@ -30,7 +32,7 @@ Para um `arquivo.txt` com conteúdo:
 
 Comprimir o `arquivo.txt` e ver a árvore gerada.
 
-    java -jar dist/huffman.jar
+    $ java -jar dist/huffman.jar
     > compress arquivo.txt arquivo.txt.hz
     compressed to file.
     > ct
@@ -61,7 +63,7 @@ Comprimir o `arquivo.txt` e ver a árvore gerada.
 Descomprimir o `arquivo.txt.hz` anterior para a memória, cuidado ao fazer
 isso com arquivos binários, nem todos os bytes são caractéres amigáveis.
 
-    java -jar dist/huffman.jar
+    $ java -jar dist/huffman.jar
     > memdec arquivo.txt.hz
     decompressed to memory
     > print
