@@ -173,6 +173,7 @@ public class Application {
                     break;
                 }
                 case "d":
+                case "dec":
                 case "decomp":
                 case "decompress": {
                     String inputFilename = input();
@@ -203,6 +204,7 @@ public class Application {
                 }
                 case "md":
                 case "memdec":
+                case "memdecomp":
                 case "memorydecompress": {
                     String inputFilename = input();
                     FileInputStream inputStream = openInputFile(inputFilename);
@@ -213,6 +215,10 @@ public class Application {
                     System.out.println("decompressed to memory.");
                     break;
                 }
+                case "p":
+                case "print":
+                    System.out.write(buffer.toByteArray());
+                    break;
                 case "-":
                 case "clear":
                     buffer.close();
