@@ -4,11 +4,15 @@ import java.io.*;
 import java.util.Stack;
 
 public class Decompressor {
-    HuffmanTree<Byte> tree;
-    InputStream inputStream;
+    protected HuffmanTree<Byte> tree;
+    protected InputStream inputStream;
 
     public Decompressor(InputStream input) {
         inputStream = input;
+    }
+
+    public HuffmanTree<Byte> getTree() {
+        return tree;
     }
 
     public void buildTree() throws IOException {

@@ -1,20 +1,22 @@
 package huffman;
 
 import java.io.IOException;
+import java.io.FilterOutputStream;
 import java.io.OutputStream;
 
-public class HuffmanByteOutputStream extends OutputStream {
+public class HuffmanByteOutputStream extends FilterOutputStream {
     HuffmanTree<Byte> tree;
-    OutputStream output;
     int currentBit;
     int currentByte;
+    //int counter;
 
     public HuffmanByteOutputStream(HuffmanTree<Byte> huffmanTree, OutputStream outputStream) throws IOException {
+        super(outputStream);
         tree = huffmanTree;
-        output = outputStream;
-        output.write(tree.getPadding());
-        currentBit = 1 << (7 - tree.getPadding());
+        out.write(tree.getPadding());
         currentByte = 0;
+        currentBit = 1 << (7 - tree.getPadding());
+        //counter = tree.getPadding();
     }
 
     @Override
@@ -23,10 +25,18 @@ public class HuffmanByteOutputStream extends OutputStream {
             if (bit) currentByte |= currentBit;
             currentBit >>= 1;
             if (currentBit == 0) {
-                output.write(currentByte);
+                out.write(currentByte);
                 currentByte = 0;
                 currentBit = 1 << 7;
             }
+            /*currentByte <<= 1;
+            currentByte = bit? currentByte + 1 : currentByte;
+            counter++;
+            if (counter == 8) {
+                out.write(currentByte);
+                currentByte = 0;
+                counter = 0;
+            }*/
         }
     }
 }

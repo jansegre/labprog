@@ -5,12 +5,33 @@ import java.util.Scanner;
 import java.util.Vector;
 
 public class Application {
-    static BufferedReader reader;
     static Scanner scanner;
+    static ByteArrayOutputStream buffer;
+    static Decompressor decompressor;
+    static Compressor compressor;
 
-    static String input() throws IOException {
-        //return reader.readLine();
+    static String input() {
         return scanner.next();
+    }
+
+    static FileInputStream openInputFile(String fileName) {
+        try {
+            return new FileInputStream(fileName);
+        } catch (FileNotFoundException e) {
+            System.out.println("file: '" + fileName + "' was not found.");
+            System.out.print("please try another filename: ");
+            return openInputFile(input());
+        }
+    }
+
+    static FileOutputStream openOutputFile(String fileName) {
+        try {
+            return new FileOutputStream(fileName);
+        } catch (FileNotFoundException e) {
+            System.out.println("file: '" + fileName + "' was not found.");
+            System.out.print("please try another filename: ");
+            return openOutputFile(input());
+        }
     }
 
     static String pathToString(Vector<Boolean> path) {
@@ -24,10 +45,54 @@ public class Application {
         return out;
     }
 
+    static String codeBook(HuffmanTree<Byte> tree) {
+        String out = "";
+        for (byte s: tree.getSymbols())
+            out += byteToString(s) + ": " + pathToString(tree.pathFor(s)) + '\n';
+        return out;
+    }
+
     static String byteToString(byte b) {
         String out = "";
         for (int i = 1 << 7; i != 0; i >>= 1)
             out += ((int)b & i) == i? "1" : "0";
+        return out;
+    }
+
+    static String bitString(String input) {
+        return bitString(input.getBytes());
+    }
+
+    static String bitString(byte[] bytes) {
+        String out = "";
+        for (byte b: bytes)
+            out += byteToString(b);
+        return out;
+    }
+
+    static String colonify(String input) {
+        return colonify(input, 16);
+    }
+
+    static String colonify(String input, int lineBreak) {
+        // the following is merely to place ';' every 8 bits so we can better distinguish bytes
+        // we could return out if we want the plain string of bits
+        String out = "";
+        int i = 1;
+        int b = 1;
+        for (char c: input.toCharArray()) {
+            out += c;
+            if (i == 8) {
+                out += ';';
+                i = 0;
+                if (b == lineBreak) {
+                    out += '\n';
+                    b = 0;
+                }
+                b++;
+            }
+            i++;
+        }
         return out;
     }
 
@@ -79,79 +144,10 @@ public class Application {
         return out;
     }
 
-    static String compAndDecomp(String input) throws IOException {
-        // make an stream to output the compressed bytes
-        ByteArrayOutputStream ocompressed = new ByteArrayOutputStream();
-
-        Compressor compressor = new Compressor(ocompressed);
-        compressor.buildTree(new ByteArrayInputStream(input.getBytes()));
-
-        // make an stream for that tree and input and read it byte per byte
-        InputStream data = new ByteArrayInputStream(input.getBytes());
-
-        // compress
-        compressor.compress(new ByteArrayInputStream(input.getBytes()));
-
-        // create an input stream from the compressed data
-        InputStream compressedStream = new ByteArrayInputStream(ocompressed.toByteArray());
-
-        Decompressor decompressor = new Decompressor(compressedStream);
-        decompressor.buildTree();
-
-        // finally somewhere to write the fresh data
-        ByteArrayOutputStream output = new ByteArrayOutputStream();
-
-        // decompress
-        decompressor.decompress(output);
-
-        return output.toString();
-    }
-
-    static String bitString(String input) {
-        return bitString(input.getBytes());
-    }
-
-    static String bitString(byte[] bytes) {
-        String out = "";
-        for (byte b: bytes)
-            out += byteToString(b);
-        return out;
-    }
-
-    static String colonify(String input) {
-        // the following is merely to place ';' every 8 bits so we can better distinguish bytes
-        // we could return out if we want the plain string of bits
-        String out = "";
-        int i = 1;
-        for (char c: input.toCharArray()) {
-            out += c;
-            if (i == 8) {
-                out += ";";
-                i = 0;
-            }
-            i++;
-        }
-        return out;
-    }
-
-    // IOException may be thrown by BufferedReader and is left untreated
-    // as such it has to be explicit after main signature
-    public static void main(String[] args) throws IOException {
-        // as well as a single BufferedReader to read lines from stdin
-        reader = new BufferedReader(new InputStreamReader(System.in));
-        scanner = new Scanner(reader);
-        // since a break inside the switch will not break the while loop
-        // we use a boolean flag to indicate whether we should terminate de main loop or not
-
-        //String test = "j'aime aller sur le bord de l'eau les jeudis ou les jours impairs";
-        String test = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. " +
-                "Integer nunc lectus, tincidunt vitae porttitor at, fermentum id erat.";
-
-        FrequencyAnalyzer<Byte> analyzer = new FrequencyAnalyzer.ByteFrequencyAnalyzer();
-        analyzer.feed(new ByteArrayInputStream(test.getBytes()));
-
-        //HuffmanTree<Byte> tree = new HuffmanTree<>(stack);
-        HuffmanTree<Byte> tree = new HuffmanTree.ByteHuffmanTree(analyzer.nodeCollection());
+    static void interactiveConsole() throws IOException {
+        String test = "j'aime aller sur le bord de l'eau les jeudis ou les jours impairs";
+        //String test = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. " +
+        //        "Integer nunc lectus, tincidunt vitae porttitor at, fermentum id erat.";
 
         boolean quit = false;
         while(!quit) {
@@ -164,14 +160,16 @@ public class Application {
                 case "compress": {
                     String inputFilename = input();
                     String outputFilename = input();
-                    FileInputStream inputStream = new FileInputStream(inputFilename);
-                    OutputStream outputStream = new FileOutputStream(outputFilename);
-                    Compressor compressor = new Compressor(outputStream);
+                    FileInputStream inputStream = openInputFile(inputFilename);
+                    OutputStream outputStream = openOutputFile(outputFilename);
+                    compressor = new Compressor(outputStream);
                     compressor.buildTree(inputStream);
                     inputStream.close();
                     inputStream = new FileInputStream(inputFilename);
                     compressor.compress(inputStream);
                     outputStream.close();
+                    inputStream.close();
+                    System.out.println("compressed to file.");
                     break;
                 }
                 case "d":
@@ -179,43 +177,82 @@ public class Application {
                 case "decompress": {
                     String inputFilename = input();
                     String outputFilename = input();
-                    FileInputStream inputStream = new FileInputStream(inputFilename);
-                    OutputStream outputStream = new FileOutputStream(outputFilename);
-                    Decompressor decompressor = new Decompressor(inputStream);
+                    FileInputStream inputStream = openInputFile(inputFilename);
+                    OutputStream outputStream = openOutputFile(outputFilename);
+                    decompressor = new Decompressor(inputStream);
                     decompressor.buildTree();
                     decompressor.decompress(outputStream);
                     inputStream.close();
                     outputStream.close();
+                    System.out.println("decompressed to file.");
                     break;
                 }
+                case "mc":
+                case "memcomp":
+                case "memorycompress": {
+                    String inputFilename = input();
+                    FileInputStream inputStream = openInputFile(inputFilename);
+                    compressor = new Compressor(buffer);
+                    compressor.buildTree(inputStream);
+                    inputStream.close();
+                    inputStream = new FileInputStream(inputFilename);
+                    compressor.compress(inputStream);
+                    inputStream.close();
+                    System.out.println("compressed to memory.");
+                    break;
+                }
+                case "md":
+                case "memdec":
+                case "memorydecompress": {
+                    String inputFilename = input();
+                    FileInputStream inputStream = openInputFile(inputFilename);
+                    decompressor = new Decompressor(inputStream);
+                    decompressor.buildTree();
+                    decompressor.decompress(buffer);
+                    inputStream.close();
+                    System.out.println("decompressed to memory.");
+                    break;
+                }
+                case "-":
+                case "clear":
+                    buffer.close();
+                    buffer = new ByteArrayOutputStream();
+                    break;
                 case "b":
-                case "bits":
-                    System.out.println(colonify(bitString(test)));
+                case "bits": {
+                    System.out.println(colonify(bitString(buffer.toByteArray())));
                     break;
-                case "s":
-                case "symbols":
-                    for (byte s: tree.getSymbols())
-                        System.out.println((char)s + ": " + pathToString(tree.pathFor(s)));
-                    break;
+                }
                 case "t":
                 case "test":
                     System.out.println(colonify(dummyCompress(test)));
+                    System.out.println("---");
                     System.out.println(colonify(betterCompress(test)));
-                    System.out.println(test);
-                    System.out.println(compAndDecomp(test));
                     break;
-                case "p":
-                case "print":
-                    System.out.println(colonify(bitString(tree.toByteArray())));
-                    System.out.println(tree);
-                    System.out.println(new HuffmanTree.ByteHuffmanTree(tree.toByteArray()));
-                    break;
-                case "i":
-                case "iter":
-                    for (HuffmanNode node: tree) {
-                        String symbol = node.getSymbol() == null? "" : ("[" + node.getSymbol() + "]");
-                        System.out.println(node.getFrequency() + " " + symbol);
+                case "ct":
+                case "ctree":
+                case "comptree":
+                    if (compressor != null) {
+                        System.out.println(compressor.getTree());
+                        System.out.println(codeBook(compressor.getTree()));
+                    } else {
+                        System.out.println("no tree yet.");
                     }
+                    break;
+                case "dt":
+                case "dtree":
+                case "domptree":
+                    if (decompressor != null) {
+                        System.out.println(decompressor.getTree());
+                        System.out.println(codeBook(decompressor.getTree()));
+                    } else {
+                        System.out.println("no tree yet.");
+                    }
+                    break;
+                case "?":
+                case "h":
+                case "help":
+                    showUsage();
                     break;
                 case "q":
                 case "quit":
@@ -226,7 +263,87 @@ public class Application {
                     System.out.println("unknown command");
                     break;
             }
-            //System.out.println("---");
+        }
+    }
+
+    static void showUsage() {
+        System.out.println(
+                "usage:\n" +
+                "interactive: java -jar dist/huffman.jar\n" +
+                "compress:    java -jar dist/huffman.jar -c file.txt file.txt.hz\n" +
+                "decompress:  java -jar dist/huffman.jar -d file.txt.hz file2.txt");
+    }
+
+    static void handleArguments(String[] args) {
+        if (args.length != 3) {
+            showUsage();
+        } else {
+            String operation = args[0];
+            String inputFilename = args[1];
+            String outputFilename = args[2];
+            FileInputStream inputStream;
+            OutputStream outputStream;
+            try {
+                inputStream = new FileInputStream(inputFilename);
+                outputStream = new FileOutputStream(outputFilename);
+                switch (operation) {
+                    case "-c":
+                        System.out.print("compressing '" + inputFilename + "' to '" + outputFilename + "'... ");
+                        compressor = new Compressor(outputStream);
+                        compressor.buildTree(inputStream);
+                        inputStream.close();
+                        inputStream = new FileInputStream(inputFilename);
+                        compressor.compress(inputStream);
+                        outputStream.close();
+                        System.out.println("ok");
+                        break;
+                    case "-d":
+                        System.out.print("decompressing '" + inputFilename + "' to '" + outputFilename + "'... ");
+                        decompressor = new Decompressor(inputStream);
+                        decompressor.buildTree();
+                        decompressor.decompress(outputStream);
+                        outputStream.close();
+                        System.out.println("ok");
+                        break;
+                    default:
+                        System.err.println("unrecognized operation '" + operation + "'.");
+                        System.exit(1);
+                        break;
+                }
+            } catch (FileNotFoundException e) {
+                System.err.println("file not found: '" + e.getMessage() + "'.");
+                System.exit(1);
+            } catch(IOException e) {
+                System.err.println("an I/O error occurred: '" + e.getMessage() + "'");
+                System.exit(1);
+            }
+        }
+    }
+
+    // IOException may be thrown by BufferedReader and is left untreated
+    // as such it has to be explicit after main signature
+    public static void main(String[] args) throws IOException {
+        // as well as a single BufferedReader to read lines from stdin
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        scanner = new Scanner(reader);
+        // since a break inside the switch will not break the while loop
+        // we use a boolean flag to indicate whether we should terminate de main loop or not
+
+        buffer = new ByteArrayOutputStream();
+
+        //FrequencyAnalyzer<Byte> analyzer;// = new FrequencyAnalyzer.ByteFrequencyAnalyzer();
+        //analyzer.feed(new ByteArrayInputStream(test.getBytes()));
+
+        //HuffmanTree<Byte> tree = new HuffmanTree<>(stack);
+        //HuffmanTree<Byte> tree;// = new HuffmanTree.ByteHuffmanTree(analyzer.nodeCollection());
+
+        compressor = null;
+        decompressor = null;
+
+        if (args.length > 0) {
+            handleArguments(args);
+        } else {
+            interactiveConsole();
         }
     }
 }

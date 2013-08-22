@@ -3,11 +3,15 @@ package huffman;
 import java.io.*;
 
 public class Compressor {
-    HuffmanTree<Byte> tree;
-    OutputStream outputStream;
+    protected HuffmanTree<Byte> tree;
+    protected OutputStream outputStream;
 
     public Compressor(OutputStream output) {
         outputStream = output;
+    }
+
+    public HuffmanTree<Byte> getTree() {
+        return tree;
     }
 
     public void buildTree(InputStream inputStream) throws IOException {
@@ -17,11 +21,11 @@ public class Compressor {
         analyzer.feed(inputStream);
         // build the tree
         tree = new HuffmanTree.ByteHuffmanTree(analyzer.nodeCollection());
+        // write the tree
+        outputStream.write(tree.toByteArray());
     }
 
     public void compress(InputStream inputStream) throws IOException {
-        // write the tree
-        outputStream.write(tree.toByteArray());
         // make a compression stream to write on the stream above
         // compress every byte on inputStream
         try (HuffmanByteOutputStream compressStream = new HuffmanByteOutputStream(tree, outputStream))
