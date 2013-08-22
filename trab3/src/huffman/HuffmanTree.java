@@ -1,5 +1,6 @@
 package huffman;
 
+import java.nio.ByteBuffer;
 import java.util.*;
 
 // this class is a generic huffman tree of nodes with symbol S
@@ -9,9 +10,13 @@ public class HuffmanTree<S> implements Iterable<HuffmanNode<S>> {
     protected Map<S, Vector<Boolean>> paths;
     protected int padding;
 
+    // cached input
+    protected Collection<HuffmanNode<S>> originalNodes;
+
     // mount the huffman tree from a given collection of nodes
     // which are pair of symbols and frequencies
     public HuffmanTree(Collection<HuffmanNode<S>> nodes) {
+        originalNodes = new Vector<>(nodes);
         PriorityQueue<HuffmanNode<S>> queue = new PriorityQueue<>(nodes);
         while (queue.size() > 1)
             queue.add(queue.poll().add(queue.poll()));
@@ -26,15 +31,15 @@ public class HuffmanTree<S> implements Iterable<HuffmanNode<S>> {
     void cacheLeafs(HuffmanNode<S> node, Vector<Boolean> prev) {
         if (node.isLeaf()) {
             leaves.add(node);
-            paths.put(node.symbol, prev);
-            padding = (padding + node.frequency * prev.size()) % 8;
+            paths.put(node.getSymbol(), prev);
+            padding = (padding + node.getFrequency() * prev.size()) % 8;
         } else {
-            Vector<Boolean> left_list = new Vector<>(prev);
-            left_list.add(false);
-            cacheLeafs(node.left_child, left_list);
-            Vector<Boolean> right_list = new Vector<>(prev);
-            right_list.add(true);
-            cacheLeafs(node.right_child, right_list);
+            Vector<Boolean> left = new Vector<>(prev);
+            left.add(false);
+            cacheLeafs(node.getLeftChild(), left);
+            Vector<Boolean> right = new Vector<>(prev);
+            right.add(true);
+            cacheLeafs(node.getRightChild(), right);
         }
     }
     
@@ -84,12 +89,48 @@ public class HuffmanTree<S> implements Iterable<HuffmanNode<S>> {
                     if (stack.isEmpty()) return null;
                     else current = stack.pop();
                 }
-                if (current.right_child != null)
-                    stack.push(current.right_child);
-                next = current.left_child;
+                if (current.getRightChild() != null)
+                    stack.push(current.getRightChild());
+                next = current.getLeftChild();
                 return current;
             }
         };
+    }
+
+    static public class ByteHuffmanTree extends HuffmanTree<Byte> {
+        public ByteHuffmanTree(Collection<HuffmanNode<Byte>> nodes) {
+            super(nodes);
+        }
+        public ByteHuffmanTree(byte[] bytes) {
+            super(fromBytes(bytes));
+        }
+
+        static private Collection<HuffmanNode<Byte>> fromBytes(byte[] bytes) {
+            Stack<HuffmanNode<Byte>> nodes = new Stack<>();
+            ByteBuffer buffer = ByteBuffer.wrap(bytes);
+            while(true) {
+                int frequency = buffer.getInt();
+                if (frequency == 0) break;
+                byte symbol = buffer.get();
+                nodes.push(new HuffmanNode<Byte>(frequency, symbol));
+            }
+            return nodes;
+        }
+
+        @Override
+        public byte[] toByteArray() {
+            ByteBuffer buffer = ByteBuffer.allocate(5 * originalNodes.size() + 4);
+            for (HuffmanNode<Byte> node: originalNodes) {
+                buffer.putInt(node.getFrequency());
+                buffer.put(node.getSymbol());
+            }
+            buffer.putInt(0);
+            return buffer.array();
+        }
+    }
+
+    public byte[] toByteArray() {
+        throw new AbstractMethodError();
     }
 
     public String toString() {

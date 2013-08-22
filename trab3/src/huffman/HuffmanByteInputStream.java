@@ -27,9 +27,9 @@ public class HuffmanByteInputStream extends InputStream {
                 currentBit = 1 << 7;
             }
             boolean bit = (currentByte & currentBit) == currentBit;
-            node = bit? node.right_child : node.left_child;
+            node = bit? node.getRightChild() : node.getLeftChild();
             currentBit >>= 1;
         }
-        return node.symbol;
+        return node.getSymbol();
     }
 }

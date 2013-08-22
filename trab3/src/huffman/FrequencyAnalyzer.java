@@ -53,13 +53,13 @@ public class FrequencyAnalyzer<S> {
     public Collection<HuffmanNode<S>> nodeCollection() {
         Stack<HuffmanNode<S>> nodes = new Stack<>();
         for (S symbol: frequencies.keySet()) {
-            nodes.push(new HuffmanNode<S>(frequencies.get(symbol), symbol));
+            nodes.push(new HuffmanNode<>(frequencies.get(symbol), symbol));
         }
         return nodes;
     }
 
     public HuffmanTree<S> toHuffmanTree() {
-        return new HuffmanTree<S>(nodeCollection());
+        return new HuffmanTree<>(nodeCollection());
     }
 
     public String toString() {

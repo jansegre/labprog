@@ -8,26 +8,40 @@ public class HuffmanNode<S> implements Comparable<HuffmanNode<S>> {
     // could be a floating point, but the number
     // is usually well bounded and integer arithmetics
     // has better performance
-    Integer frequency;
-    // this can be a single char, this node is generic
-    // enough to support a symbol
-    S symbol;
+    protected Integer frequency;
 
-    // this objects are used to traverse the tree
-    // only one of the parents should be set, the other must be null
-    // this structure is used to easily know if a node
-    // is a right or left child of its parent, i.e.,
-    // in case it has a left parent, then it is a right child
-    HuffmanNode left_child, right_child;
-    HuffmanNode left_parent, right_parent;
-
-    public HuffmanNode(int frequency) {
-        this.frequency = frequency;
+    public Integer getFrequency() {
+        return frequency;
     }
 
-    public HuffmanNode(int frequency, S symbol) {
-        this(frequency);
-        this.symbol = symbol;
+    // this can be a single char, this node is generic
+    // enough to support a symbol
+    protected S symbol;
+
+    public S getSymbol() {
+        return symbol;
+    }
+
+    // this objects are used to traverse the binary tree
+    private HuffmanNode<S> leftChild, rightChild;
+
+    public HuffmanNode<S> getLeftChild() {
+        return leftChild;
+    }
+
+    public HuffmanNode<S> getRightChild() {
+        return rightChild;
+    }
+
+    // constructors
+
+    public HuffmanNode(int f) {
+        frequency = f;
+    }
+
+    public HuffmanNode(int f, S s) {
+        this(f);
+        symbol = s;
     }
 
     // we implement the comparable interface to be able to use
@@ -38,14 +52,10 @@ public class HuffmanNode<S> implements Comparable<HuffmanNode<S>> {
 
     // this operation is used to mount the queue with internal nodes
     // notice that the symbol is null
-    public HuffmanNode add(HuffmanNode other) {
-        HuffmanNode node = new HuffmanNode(this.frequency + other.frequency);
-        // this node
-        node.left_child = this;
-        this.right_parent = node;
-        // the other node
-        node.right_child = other;
-        other.left_parent = node;
+    public HuffmanNode<S> add(HuffmanNode<S> other) {
+        HuffmanNode<S> node = new HuffmanNode<>(this.frequency + other.frequency);
+        node.leftChild = this;
+        node.rightChild = other;
         return node;
     }
 
@@ -54,7 +64,7 @@ public class HuffmanNode<S> implements Comparable<HuffmanNode<S>> {
     // a simple version would be to check if the symbol is null, but the formal
     // definition of leaf is used instead
     public boolean isLeaf() {
-        return left_child == null && right_child == null;
+        return leftChild == null && rightChild == null;
     }
 
     public String toString() {
