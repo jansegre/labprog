@@ -36,8 +36,8 @@ public class Compressor {
         // make a compression stream to write on the stream above
         // compress every byte on inputStream
         try (
-                HuffmanByteOutputStream compressStream = new HuffmanByteOutputStream(tree, outputStream);
-                BufferedInputStream bufferedInputStream = new BufferedInputStream(inputStream, bufferSize)
+            HuffmanByteOutputStream compressStream = new HuffmanByteOutputStream(tree, outputStream);
+            BufferedInputStream bufferedInputStream = new BufferedInputStream(inputStream, bufferSize)
         )
         {
             int c;

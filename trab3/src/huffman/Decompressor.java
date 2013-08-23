@@ -1,7 +1,6 @@
 package huffman;
 
 import java.io.*;
-import java.util.Stack;
 
 public class Decompressor {
     protected HuffmanTree<Byte> tree;
@@ -30,8 +29,8 @@ public class Decompressor {
         // make a compression stream to write on the stream above
         // compress every byte on inputStream
         try (
-                HuffmanByteInputStream decompressStream = new HuffmanByteInputStream(tree, inputStream);
-                BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(outputStream, bufferSize)
+            HuffmanByteInputStream decompressStream = new HuffmanByteInputStream(tree, inputStream);
+            BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(outputStream, bufferSize)
         )
         {
             int c;

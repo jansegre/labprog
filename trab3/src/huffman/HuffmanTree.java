@@ -19,33 +19,51 @@ public class HuffmanTree<S> implements Iterable<HuffmanNode<S>> {
     // mount the huffman tree from a given collection of nodes
     // which are pair of symbols and frequencies
     public HuffmanTree(Collection<HuffmanNode<S>> nodes) {
+        // make a copy of the given nodes to use it later
         originalNodes = new Vector<>(nodes);
+
+        // build the tree as detailed here: http://en.wikipedia.org/wiki/Huffman_coding#Compression
         PriorityQueue<HuffmanNode<S>> queue = new PriorityQueue<>(nodes);
         while (queue.size() > 1)
             queue.add(queue.poll().add(queue.poll()));
         root = queue.poll();
+
+        // cache some useful information to allow faster access
+        // we predict a size of 256 and will only grow if it hits 100%
         paths = new HashMap<>(256, 1.0f);
         leaves = new HashSet<>(256, 1.0f);
+        // padding is calculeted during the leaf caching
         padding = 0;
-        cacheLeafs(root, new boolean[0]);
+        cacheLeaves(root, new boolean[0]);
+        // by the end of the cache we have how many bits will be
+        // written on the last byte, the padding is the size of space left
         padding = 8 - padding;
     }
 
-    void cacheLeafs(HuffmanNode<S> node, boolean[] prev) {
+    // used internally to cache the leaves and each path to it
+    private void cacheLeaves(HuffmanNode<S> node, boolean[] path) {
+        // if we haven't hit a leaf yet
         if (!node.isLeaf()) {
-            boolean[] left = Arrays.copyOf(prev, prev.length + 1);
-            left[prev.length] = false;
-            cacheLeafs(node.getLeftChild(), left);
-            boolean[] right = Arrays.copyOf(prev, prev.length + 1);
-            right[prev.length] = true;
-            cacheLeafs(node.getRightChild(), right);
+            // recurse by copying forking the path
+            // appended of a false to the left
+            boolean[] leftPath = Arrays.copyOf(path, path.length + 1);
+            leftPath[path.length] = false;
+            cacheLeaves(node.getLeftChild(), leftPath);
+            // and true to the right
+            boolean[] rightPath = Arrays.copyOf(path, path.length + 1);
+            rightPath[path.length] = true;
+            cacheLeaves(node.getRightChild(), rightPath);
         } else {
+            // found it, cache it
             leaves.add(node);
-            paths.put(node.getSymbol(), prev);
-            padding = (padding + node.getFrequency() * prev.length) % 8;
+            // and its path
+            paths.put(node.getSymbol(), path);
+            // and calculate the offset caused by this symbol
+            padding = (padding + node.getFrequency() * path.length) % 8;
         }
     }
-    
+
+    // array if trues (rights) and falses (lefts) that lead to that symbol
     public boolean[] pathFor(S symbol) {
         return paths.get(symbol);
     }
@@ -54,7 +72,7 @@ public class HuffmanTree<S> implements Iterable<HuffmanNode<S>> {
         return paths.keySet();
     }
 
-    public Set<HuffmanNode<S>> getLeaves() {
+    public Collection<HuffmanNode<S>> getLeaves() {
         return leaves;
     }
 
@@ -100,20 +118,27 @@ public class HuffmanTree<S> implements Iterable<HuffmanNode<S>> {
         };
     }
 
+    // this implementation is useful when dealing with bytes
     static public class ByteHuffmanTree extends HuffmanTree<Byte> {
         public ByteHuffmanTree(Collection<HuffmanNode<Byte>> nodes) {
             super(nodes);
         }
+
+        // construct by reading from a stream
         public ByteHuffmanTree(InputStream inputStream) throws IOException {
-            super(fromBytes(inputStream));
+            this(fromBytes(inputStream));
         }
 
+        // internal helper to run code prior to calling super/this
         static private Collection<HuffmanNode<Byte>> fromBytes(InputStream inputStream) throws IOException {
             Stack<HuffmanNode<Byte>> nodes = new Stack<>();
             DataInputStream dataInputStream = new DataInputStream(inputStream);
             while(true) {
+                // basically read the frequencies
                 int frequency = dataInputStream.readInt();
+                // until zero frequency is found
                 if (frequency == 0) break;
+                // otherwise read the symbol that follows that frequency
                 byte symbol = dataInputStream.readByte();
                 nodes.push(new HuffmanNode<>(frequency, symbol));
             }
@@ -124,11 +149,15 @@ public class HuffmanTree<S> implements Iterable<HuffmanNode<S>> {
         // this is kind of a workaround since java doesn't have specializations
         @Override
         public byte[] toByteArray() {
+            // the basic idea is to store the nodes as we received it so when
+            // we deserialize them the constructor build the tree in the same manner
+            // as it was originally built
             ByteBuffer buffer = ByteBuffer.allocate(5 * originalNodes.size() + 4);
             for (HuffmanNode<Byte> node: originalNodes) {
                 buffer.putInt(node.getFrequency());
                 buffer.put(node.getSymbol());
             }
+            // denote the end with a frequency of zero
             buffer.putInt(0);
             return buffer.array();
         }

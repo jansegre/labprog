@@ -10,20 +10,33 @@ public class HuffmanNode<S> implements Comparable<HuffmanNode<S>> {
     // has better performance
     protected Integer frequency;
 
-    public Integer getFrequency() {
-        return frequency;
-    }
-
     // this can be a single char, this node is generic
     // enough to support a symbol
     protected S symbol;
 
+    // this objects are used to traverse the binary tree
+    private HuffmanNode<S> leftChild, rightChild;
+
+    // construct with frequency only
+    public HuffmanNode(int f) {
+        frequency = f;
+    }
+
+    // construct with frequency and symbol
+    public HuffmanNode(int f, S s) {
+        this(f);
+        symbol = s;
+    }
+
+    // some getters
+
+    public Integer getFrequency() {
+        return frequency;
+    }
+
     public S getSymbol() {
         return symbol;
     }
-
-    // this objects are used to traverse the binary tree
-    private HuffmanNode<S> leftChild, rightChild;
 
     public HuffmanNode<S> getLeftChild() {
         return leftChild;
@@ -33,15 +46,10 @@ public class HuffmanNode<S> implements Comparable<HuffmanNode<S>> {
         return rightChild;
     }
 
-    // constructors
-
-    public HuffmanNode(int f) {
-        frequency = f;
-    }
-
-    public HuffmanNode(int f, S s) {
-        this(f);
-        symbol = s;
+    // this method is here to abstract the side that will
+    // be descended given true or false
+    public HuffmanNode<S> getNextChild(boolean bit) {
+        return bit? getRightChild() : getLeftChild();
     }
 
     // we implement the comparable interface to be able to use
@@ -67,6 +75,7 @@ public class HuffmanNode<S> implements Comparable<HuffmanNode<S>> {
         return leftChild == null && rightChild == null;
     }
 
+    // will print either "frequency" or "frequency {symbol}" whether symbol is null or not
     public String toString() {
         String out = frequency.toString();
         if (symbol != null)
