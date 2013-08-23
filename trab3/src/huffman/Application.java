@@ -9,6 +9,27 @@ public class Application {
     protected ByteArrayOutputStream buffer;
     protected Decompressor decompressor;
     protected Compressor compressor;
+    protected HuffmanTree<Byte> tree;
+
+    public Application() {
+        // as well as a single BufferedReader to read lines from stdin
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        scanner = new Scanner(reader);
+        // since a break inside the switch will not break the while loop
+        // we use a boolean flag to indicate whether we should terminate de main loop or not
+
+        buffer = new ByteArrayOutputStream();
+
+        //FrequencyAnalyzer<Byte> analyzer;// = new FrequencyAnalyzer.ByteFrequencyAnalyzer();
+        //analyzer.feed(new ByteArrayInputStream(test.getBytes()));
+
+        //HuffmanTree<Byte> tree = new HuffmanTree<>(stack);
+        //HuffmanTree<Byte> tree;// = new HuffmanTree.ByteHuffmanTree(analyzer.nodeCollection());
+
+        compressor = null;
+        decompressor = null;
+        tree = null;
+    }
 
     String input() {
         return scanner.next();
@@ -47,8 +68,8 @@ public class Application {
 
     String codeBook(HuffmanTree<Byte> tree) {
         String out = "";
-        for (byte s: tree.getSymbols())
-            out += byteToString(s) + ": " + pathToString(tree.pathFor(s)) + '\n';
+        for (Byte s: tree.getSymbols())
+            out += (s == null? "eof-byte" : byteToString(s)) + ": " + pathToString(tree.pathFor(s)) + '\n';
         return out;
     }
 
@@ -103,15 +124,12 @@ public class Application {
         analyzer.feed(new ByteArrayInputStream(input.getBytes()));
         // build the tree
         HuffmanTree<Byte> tree = analyzer.toHuffmanTree();
-        // start initially with a representation of the padding
-        String out = byteToString((byte)tree.getPadding());
-        // pad so we always have an integer number of bytes (no missing bits)
-        // XXX remember to read the padding and ignore the padded bits
-        for (int i = tree.getPadding(); i > 0; --i)
-            out += "0";
+        String out = "";
         // start writing each bit from the path
         for (byte b: input.getBytes())
             out += pathToString(tree.pathFor(b));
+        // remember to mark the end
+        out += pathToString(tree.pathFor(null));
         return out;
     }
 
@@ -121,21 +139,20 @@ public class Application {
         // feed bytes into the analyzer
         analyzer.feed(new ByteArrayInputStream(input.getBytes()));
         // build the tree
-        HuffmanTree<Byte> tree = analyzer.toHuffmanTree();
-        // make an stream for that tree and input and read it byte per byte
-        InputStream istream = new ByteArrayInputStream(input.getBytes());
+        tree = analyzer.toHuffmanTree();
         // make an stream to output the compressed bytes
         ByteArrayOutputStream output = new ByteArrayOutputStream();
-        // make a compression stream to write on the stream above
-        HuffmanByteOutputStream ostream = new HuffmanByteOutputStream(tree, output);
-        // compress every byte on istream
-        try {
+        try (
+            // make an stream for that tree and input and read it byte per byte
+            InputStream inputStream = new ByteArrayInputStream(input.getBytes());
+            // make a compression stream to write on the stream above
+            HuffmanByteOutputStream outputStream = new HuffmanByteOutputStream(tree, output)
+        ) {
+            // compress every byte on inputStream
             int c;
-            while ((c = istream.read()) != -1)
-                ostream.write(c);
-        } finally {
-            ostream.close();
-            istream.close();
+            while ((c = inputStream.read()) != -1)
+                outputStream.write(c);
+            outputStream.flush();
         }
         // make the output string
         String out = "";
@@ -145,7 +162,7 @@ public class Application {
     }
 
     void interactiveConsole() throws IOException {
-        String test = "j'aime aller sur le bord de l'eau les jeudis ou les jours impairs";
+        String test = "j'aime aller sur le bord de l'eau les jeudis ou les jours impairs.";
         //String test = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. " +
         //        "Integer nunc lectus, tincidunt vitae porttitor at, fermentum id erat.";
 
@@ -155,6 +172,14 @@ public class Application {
             // read input from the user (read with a nice > prompt)
             System.out.print("> ");
             switch(input()) {
+                case "t":
+                case "test":
+                    System.out.println(colonify(dummyCompress(test)));
+                    System.out.println("---");
+                    System.out.println(colonify(betterCompress(test)));
+                    System.out.println("---");
+                    System.out.println(codeBook(tree));
+                    break;
                 case "c":
                 case "comp":
                 case "compress": {
@@ -229,12 +254,6 @@ public class Application {
                     System.out.println(colonify(bitString(buffer.toByteArray())));
                     break;
                 }
-                case "t":
-                case "test":
-                    System.out.println(colonify(dummyCompress(test)));
-                    System.out.println("---");
-                    System.out.println(colonify(betterCompress(test)));
-                    break;
                 case "ct":
                 case "ctree":
                 case "comptree":
@@ -324,25 +343,6 @@ public class Application {
                 System.exit(1);
             }
         }
-    }
-
-    public Application() {
-        // as well as a single BufferedReader to read lines from stdin
-        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-        scanner = new Scanner(reader);
-        // since a break inside the switch will not break the while loop
-        // we use a boolean flag to indicate whether we should terminate de main loop or not
-
-        buffer = new ByteArrayOutputStream();
-
-        //FrequencyAnalyzer<Byte> analyzer;// = new FrequencyAnalyzer.ByteFrequencyAnalyzer();
-        //analyzer.feed(new ByteArrayInputStream(test.getBytes()));
-
-        //HuffmanTree<Byte> tree = new HuffmanTree<>(stack);
-        //HuffmanTree<Byte> tree;// = new HuffmanTree.ByteHuffmanTree(analyzer.nodeCollection());
-
-        compressor = null;
-        decompressor = null;
     }
 
     // IOException may be thrown by BufferedReader and is left untreated

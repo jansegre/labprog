@@ -75,10 +75,10 @@ public class HuffmanNode<S> implements Comparable<HuffmanNode<S>> {
         return leftChild == null && rightChild == null;
     }
 
-    // will print either "frequency" or "frequency {symbol}" whether symbol is null or not
+    // will print either "frequency" or "frequency {symbol}" whether it is a leaf or not
     public String toString() {
         String out = frequency.toString();
-        if (symbol != null)
+        if (isLeaf())
             out += " {" + symbol + "}";
         return out;
     }

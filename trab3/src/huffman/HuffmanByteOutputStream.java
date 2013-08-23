@@ -13,17 +13,26 @@ public class HuffmanByteOutputStream extends FilterOutputStream {
     public HuffmanByteOutputStream(HuffmanTree<Byte> huffmanTree, OutputStream outputStream) throws IOException {
         super(outputStream);
         tree = huffmanTree;
-        out.write(tree.getPadding());
-        // we start with an all zero byte
+        //out.write(tree.getPadding());
+        // we start with an all zero byte and a mask pointing to the first bit
         currentByte = 0;
-        // and a shifted mask/counter
-        currentMask = 1 << (7 - tree.getPadding());
-        //counter = tree.getPadding();
+        currentMask = 1 << 7;
+    }
+
+    // this method must be called to properly mark the end of the code
+    @Override
+    public void flush() throws IOException {
+        this.writeByte(null);
+        super.flush();
     }
 
     @Override
     public void write(int b) throws IOException {
-        for (boolean bit: tree.pathFor((byte)b)) {
+        this.writeByte((byte)b);
+    }
+
+    public void writeByte(Byte b) throws IOException {
+        for (boolean bit: tree.pathFor(b)) {
             // strategy to write bit by bit
             // add the current mask if the bit is true
             if (bit) currentByte |= currentMask;

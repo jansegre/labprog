@@ -13,12 +13,9 @@ public class HuffmanByteInputStream extends FilterInputStream {
         super(inputStream);
         tree = huffmanTree;
         int padding;
-        // the first byte read is used to indicate the padding
-        padding = in.read();
-        // we start with the first byte
+        // we start with the first byte, and a fresh mask
         currentByte = in.read();
-        // and a shifted mask since we know the padding
-        currentMask = 1 << (7 - padding);
+        currentMask = 1 << 7;
     }
 
     @Override
@@ -32,7 +29,7 @@ public class HuffmanByteInputStream extends FilterInputStream {
                 int b = in.read();
                 // check if we have reached the end of our input
                 if (b != -1) currentByte = b;
-                else return b;
+                else return -1;
                 // and reset the mask since we have a new byte
                 currentMask = 1 << 7;
             }
@@ -43,6 +40,8 @@ public class HuffmanByteInputStream extends FilterInputStream {
             if (node == null)
                 throw new IOException("Invalid node when walking the tree, possibly corrupted data.");
         }
+        if (node.getSymbol() == null)
+            return -1;
         // XXX the following is a hack to prevent the integer value of return
         // from being -1, since 0x100 is greater than any byte the sum as an
         // integer will always be positive, the error that happened before

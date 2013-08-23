@@ -11,7 +11,6 @@ public class HuffmanTree<S> implements Iterable<HuffmanNode<S>> {
     protected HuffmanNode<S> root;
     protected Set<HuffmanNode<S>> leaves;
     protected Map<S, boolean[]> paths;
-    protected int padding;
 
     // cached input
     protected Collection<HuffmanNode<S>> originalNodes;
@@ -19,8 +18,11 @@ public class HuffmanTree<S> implements Iterable<HuffmanNode<S>> {
     // mount the huffman tree from a given collection of nodes
     // which are pair of symbols and frequencies
     public HuffmanTree(Collection<HuffmanNode<S>> nodes) {
-        // make a copy of the given nodes to use it later
+        // make a copy of the given nodes to use it on the serialization
         originalNodes = new Vector<>(nodes);
+
+        // append the null terminator, used to indicate end of stream, with lowest priority
+        nodes.add(new HuffmanNode<S>(0, null));
 
         // build the tree as detailed here: http://en.wikipedia.org/wiki/Huffman_coding#Compression
         PriorityQueue<HuffmanNode<S>> queue = new PriorityQueue<>(nodes);
@@ -29,15 +31,10 @@ public class HuffmanTree<S> implements Iterable<HuffmanNode<S>> {
         root = queue.poll();
 
         // cache some useful information to allow faster access
-        // we predict a size of 256 and will only grow if it hits 100%
-        paths = new HashMap<>(256, 1.0f);
-        leaves = new HashSet<>(256, 1.0f);
-        // padding is calculeted during the leaf caching
-        padding = 0;
+        // we predict a size of 256 plus the null terminator, and will only grow if it hits 100%
+        paths = new HashMap<>(257, 1.0f);
+        leaves = new HashSet<>(257, 1.0f);
         cacheLeaves(root, new boolean[0]);
-        // by the end of the cache we have how many bits will be
-        // written on the last byte, the padding is the size of space left
-        padding = 8 - padding;
     }
 
     // used internally to cache the leaves and each path to it
@@ -58,8 +55,6 @@ public class HuffmanTree<S> implements Iterable<HuffmanNode<S>> {
             leaves.add(node);
             // and its path
             paths.put(node.getSymbol(), path);
-            // and calculate the offset caused by this symbol
-            padding = (padding + node.getFrequency() * path.length) % 8;
         }
     }
 
@@ -74,10 +69,6 @@ public class HuffmanTree<S> implements Iterable<HuffmanNode<S>> {
 
     public Collection<HuffmanNode<S>> getLeaves() {
         return leaves;
-    }
-
-    public int getPadding() {
-        return padding;
     }
 
     public HuffmanNode<S> getRoot() {
@@ -169,10 +160,9 @@ public class HuffmanTree<S> implements Iterable<HuffmanNode<S>> {
         throw new AbstractMethodError();
     }
 
-    // will print <HuffmanTree: _padding_ node node node leaf {symbol} node leaf {symbol} ... leaf {symbol}>
+    // will print <HuffmanTree: node node node leaf {symbol} node leaf {symbol} ... leaf {symbol}>
     public String toString() {
         String out = "<HuffmanTree:";
-        out += " _" + padding + "_";
         for (HuffmanNode<S> node: this)
             out += " " + node;
         out += ">";
