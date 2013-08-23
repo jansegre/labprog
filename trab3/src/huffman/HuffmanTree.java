@@ -1,5 +1,8 @@
 package huffman;
 
+import java.io.DataInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.util.*;
 
@@ -7,7 +10,7 @@ import java.util.*;
 public class HuffmanTree<S> implements Iterable<HuffmanNode<S>> {
     protected HuffmanNode<S> root;
     protected Set<HuffmanNode<S>> leaves;
-    protected Map<S, Vector<Boolean>> paths;
+    protected Map<S, boolean[]> paths;
     protected int padding;
 
     // cached input
@@ -24,26 +27,26 @@ public class HuffmanTree<S> implements Iterable<HuffmanNode<S>> {
         paths = new HashMap<>(256, 1.0f);
         leaves = new HashSet<>(256, 1.0f);
         padding = 0;
-        cacheLeafs(root, new Vector<Boolean>());
+        cacheLeafs(root, new boolean[0]);
         padding = 8 - padding;
     }
 
-    void cacheLeafs(HuffmanNode<S> node, Vector<Boolean> prev) {
-        if (node.isLeaf()) {
+    void cacheLeafs(HuffmanNode<S> node, boolean[] prev) {
+        if (!node.isLeaf()) {
+            boolean[] left = Arrays.copyOf(prev, prev.length + 1);
+            left[prev.length] = false;
+            cacheLeafs(node.getLeftChild(), left);
+            boolean[] right = Arrays.copyOf(prev, prev.length + 1);
+            right[prev.length] = true;
+            cacheLeafs(node.getRightChild(), right);
+        } else {
             leaves.add(node);
             paths.put(node.getSymbol(), prev);
-            padding = (padding + node.getFrequency() * prev.size()) % 8;
-        } else {
-            Vector<Boolean> left = new Vector<>(prev);
-            left.add(false);
-            cacheLeafs(node.getLeftChild(), left);
-            Vector<Boolean> right = new Vector<>(prev);
-            right.add(true);
-            cacheLeafs(node.getRightChild(), right);
+            padding = (padding + node.getFrequency() * prev.length) % 8;
         }
     }
     
-    public Vector<Boolean> pathFor(S symbol) {
+    public boolean[] pathFor(S symbol) {
         return paths.get(symbol);
     }
 
@@ -101,22 +104,24 @@ public class HuffmanTree<S> implements Iterable<HuffmanNode<S>> {
         public ByteHuffmanTree(Collection<HuffmanNode<Byte>> nodes) {
             super(nodes);
         }
-        public ByteHuffmanTree(byte[] bytes) {
-            super(fromBytes(bytes));
+        public ByteHuffmanTree(InputStream inputStream) throws IOException {
+            super(fromBytes(inputStream));
         }
 
-        static private Collection<HuffmanNode<Byte>> fromBytes(byte[] bytes) {
+        static private Collection<HuffmanNode<Byte>> fromBytes(InputStream inputStream) throws IOException {
             Stack<HuffmanNode<Byte>> nodes = new Stack<>();
-            ByteBuffer buffer = ByteBuffer.wrap(bytes);
+            DataInputStream dataInputStream = new DataInputStream(inputStream);
             while(true) {
-                int frequency = buffer.getInt();
+                int frequency = dataInputStream.readInt();
                 if (frequency == 0) break;
-                byte symbol = buffer.get();
+                byte symbol = dataInputStream.readByte();
                 nodes.push(new HuffmanNode<>(frequency, symbol));
             }
             return nodes;
         }
 
+        // implementation of how to serialize a HuffmanTree<Byte>
+        // this is kind of a workaround since java doesn't have specializations
         @Override
         public byte[] toByteArray() {
             ByteBuffer buffer = ByteBuffer.allocate(5 * originalNodes.size() + 4);
@@ -129,10 +134,13 @@ public class HuffmanTree<S> implements Iterable<HuffmanNode<S>> {
         }
     }
 
+    // provide a fake abstract method to allow virtual calling of
+    // it on special implementations such as ByteHuffmanTree
     public byte[] toByteArray() {
         throw new AbstractMethodError();
     }
 
+    // will print <HuffmanTree: _padding_ node node node leaf {symbol} node leaf {symbol} ... leaf {symbol}>
     public String toString() {
         String out = "<HuffmanTree:";
         out += " _" + padding + "_";

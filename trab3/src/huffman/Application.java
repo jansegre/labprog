@@ -34,7 +34,7 @@ public class Application {
         }
     }
 
-    String pathToString(Vector<Boolean> path) {
+    String pathToString(boolean[] path) {
         String out = "";
         if (path == null) {
             System.err.println("null path found");

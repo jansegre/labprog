@@ -23,15 +23,7 @@ public class Decompressor {
     }
 
     public void buildTree() throws IOException {
-        Stack<HuffmanNode<Byte>> nodes = new Stack<>();
-        DataInputStream dataInputStream = new DataInputStream(inputStream);
-        while(true) {
-            int frequency = dataInputStream.readInt();
-            if (frequency == 0) break;
-            byte symbol = dataInputStream.readByte();
-            nodes.push(new HuffmanNode<>(frequency, symbol));
-        }
-        tree = new HuffmanTree.ByteHuffmanTree(nodes);
+        tree = new HuffmanTree.ByteHuffmanTree(inputStream);
     }
 
     public void decompress(OutputStream outputStream) throws IOException {
