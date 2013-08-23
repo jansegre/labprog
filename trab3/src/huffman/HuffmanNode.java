@@ -79,7 +79,7 @@ public class HuffmanNode<S> implements Comparable<HuffmanNode<S>> {
     public String toString() {
         String out = frequency.toString();
         if (isLeaf())
-            out += " {" + symbol + "}";
+            out += " {" + (symbol == null ? "EOF" : String.format("0x%02x", symbol)) + "}";
         return out;
     }
 }

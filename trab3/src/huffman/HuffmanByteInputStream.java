@@ -29,7 +29,7 @@ public class HuffmanByteInputStream extends FilterInputStream {
                 int b = in.read();
                 // check if we have reached the end of our input
                 if (b != -1) currentByte = b;
-                else return -1;
+                else throw new IOException("Unexpected end of input, possibly corrupted data.");
                 // and reset the mask since we have a new byte
                 currentMask = 1 << 7;
             }

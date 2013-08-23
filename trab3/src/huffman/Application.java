@@ -69,7 +69,7 @@ public class Application {
     String codeBook(HuffmanTree<Byte> tree) {
         String out = "";
         for (Byte s: tree.getSymbols())
-            out += (s == null? "nullterm" : byteToString(s)) + ": " + pathToString(tree.pathFor(s)) + '\n';
+            out +=  (s == null? "EOF  nullterm" : String.format("0x%02x %s", s, byteToString(s))) + ": " + pathToString(tree.pathFor(s)) + '\n';
         return out;
     }
 
@@ -224,6 +224,7 @@ public class Application {
                     break;
                 }
                 case "md":
+                case "mddec":
                 case "memdec":
                 case "memdecomp":
                 case "memorydecompress": {
