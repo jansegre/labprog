@@ -5,9 +5,9 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public class HuffmanByteInputStream extends FilterInputStream {
-    HuffmanTree<Byte> tree;
-    int currentMask;
-    int currentByte;
+    protected HuffmanTree<Byte> tree;
+    private int currentMask;
+    private int currentByte;
 
     public HuffmanByteInputStream(HuffmanTree<Byte> huffmanTree, InputStream inputStream) throws IOException {
         super(inputStream);

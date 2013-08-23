@@ -69,7 +69,7 @@ public class Application {
     String codeBook(HuffmanTree<Byte> tree) {
         String out = "";
         for (Byte s: tree.getSymbols())
-            out += (s == null? "eof-byte" : byteToString(s)) + ": " + pathToString(tree.pathFor(s)) + '\n';
+            out += (s == null? "nullterm" : byteToString(s)) + ": " + pathToString(tree.pathFor(s)) + '\n';
         return out;
     }
 
@@ -152,19 +152,15 @@ public class Application {
             int c;
             while ((c = inputStream.read()) != -1)
                 outputStream.write(c);
-            outputStream.flush();
         }
         // make the output string
-        String out = "";
-        for (byte b: output.toByteArray())
-            out += byteToString(b);
-        return out;
+        return bitString(output.toByteArray());
     }
 
     void interactiveConsole() throws IOException {
-        String test = "j'aime aller sur le bord de l'eau les jeudis ou les jours impairs.";
-        //String test = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. " +
-        //        "Integer nunc lectus, tincidunt vitae porttitor at, fermentum id erat.";
+        //String test = "j'aime aller sur le bord de l'eau les jeudis ou les jours impairs.";
+        String test = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. " +
+                "Integer nunc lectus, tincidunt vitae porttitor at, fermentum id erat.";
 
         boolean quit = false;
         while(!quit) {

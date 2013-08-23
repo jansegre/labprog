@@ -5,10 +5,10 @@ import java.io.FilterOutputStream;
 import java.io.OutputStream;
 
 public class HuffmanByteOutputStream extends FilterOutputStream {
-    HuffmanTree<Byte> tree;
-    int currentMask;
-    int currentByte;
-    //int counter;
+    protected HuffmanTree<Byte> tree;
+    private int currentMask;
+    private int currentByte;
+    //private int counter;
 
     public HuffmanByteOutputStream(HuffmanTree<Byte> huffmanTree, OutputStream outputStream) throws IOException {
         super(outputStream);
@@ -23,6 +23,8 @@ public class HuffmanByteOutputStream extends FilterOutputStream {
     @Override
     public void flush() throws IOException {
         this.writeByte(null);
+        if (currentMask != 1 << 7)
+            out.write(currentByte);
         super.flush();
     }
 
