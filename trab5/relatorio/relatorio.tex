@@ -1,0 +1,117 @@
+\documentclass[
+	% -- opções da classe memoir --
+	12pt,				% tamanho da fonte
+	%openright,			% capítulos começam em pág ímpar (insere página vazia caso preciso)
+	%twoside,			% para impressão em verso e anverso. Oposto a oneside
+	oneside,			% para impressão em verso e anverso. Oposto a oneside
+	a4paper,			% tamanho do papel. 
+	% -- opções da classe abntex2 --
+	%chapter=TITLE,		% títulos de capítulos convertidos em letras maiúsculas
+	%section=TITLE,		% títulos de seções convertidos em letras maiúsculas
+	%subsection=TITLE,	% títulos de subseções convertidos em letras maiúsculas
+	%subsubsection=TITLE,% títulos de subsubseções convertidos em letras maiúsculas
+	% -- opções do pacote babel --
+	english,			% idioma adicional para hifenização
+	brazil,				% o último idioma é o principal do documento
+	% -- opções da classe ime-abntex2 --
+	%brasao,
+	]{ime-abntex2}
+
+% ---
+% Pacotes fundamentais
+% ---
+\usepackage[utf8]{inputenc}		% Codificacao do documento (conversão automática dos acentos)
+\usepackage{cmap}			% Mapear caracteres especiais no PDF
+\usepackage{lmodern}			% Usa a fonte Latin Modern
+%\usepackage{amsmath}			% Para usar fontes ams
+%\usepackage{amsfonts}			% Para usar fontes ams
+%\usepackage{times}			% Usa a fonte Times
+\usepackage[T1]{fontenc}		% Selecao de codigos de fonte.
+%\usepackage{lastpage}			% Usado pela Ficha catalográfica
+\usepackage{indentfirst}		% Indenta o primeiro parágrafo de cada seção.
+\usepackage{color}			% Controle das cores
+\usepackage{graphicx}			% Inclusão de gráficos
+\usepackage{algorithm2e}		% Para escrever algorítimos
+\usepackage{listings}
+% o seguinte é necessário para corrigir um bug no algorithm2e
+% http://tex.stackexchange.com/questions/113325/problem-with-algorithm2e-and-portuguese-option
+\SetKwFor{Para}{para}{fa\c{c}a}{fim para}
+% não era pra precisar do seguinte, mas precisa para traduzir a captions dos algoritmos
+\renewcommand{\algorithmcfname}{Algoritmo}%
+% ---
+
+% ---
+% Informações de dados para CAPA e FOLHA DE ROSTO
+% ---
+\titulo{Atividade Prática 5 - Validação de HTML}
+\autor{Jan Segre}
+\local{Rio de Janeiro}
+\data{Março de 2014}
+\orientador{Maj Anderson}
+\instituicao{
+  Instituto Militar de Engenharia
+  \par
+  Seção de Computação
+  \par
+  Graduação em Engenharia de Computação}
+
+% informações do PDF
+\definecolor{blue}{RGB}{0,0,0}
+\makeatletter
+\hypersetup{
+	%pagebackref=true,
+	pdftitle={\@title},
+	pdfauthor={\@author},
+	pdfsubject={\imprimirpreambulo},
+	pdfcreator={LaTeX with abnTeX2},
+	pdfkeywords={ime}{robocup}{analise}{logs}{rede neural},
+	colorlinks=true,		% false: boxed links; true: colored links
+	linkcolor=blue,			% color of internal links
+	citecolor=blue,			% color of links to bibliography
+	filecolor=magenta,		% color of file links
+	urlcolor=blue,
+	bookmarksdepth=4
+}
+\makeatother
+% ---
+
+% Controle do espaçamento entre um parágrafo e outro:
+\setlength{\parskip}{\onelineskip}
+
+% ---
+% compila o indice
+% ---
+\makeindex
+% ---
+
+% ----
+% Início do documento
+% ----
+\begin{document}
+
+\imprimircapa
+
+% ---
+% inserir o sumario
+% ---
+%\pdfbookmark[0]{\contentsname}{toc}
+%\tableofcontents*
+%\cleardoublepage
+% ---
+
+
+% ----------------------------------------------------------
+% ELEMENTOS TEXTUAIS
+% ----------------------------------------------------------
+\textual
+
+\lstinputlisting[language=Java,frame=single,breaklines=true]{../src/main/java/com/jansegre/labprog3/validator/Validator.java}
+%\begin{lstlisting}
+%\end{lstlisting}
+
+% ---
+% Finaliza a parte no bookmark do PDF, para que se inicie o bookmark na raiz
+% ---
+\bookmarksetup{startatroot}%
+
+\end{document}
