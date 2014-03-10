@@ -1,0 +1,594 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Atividade Prática #7 - Formulário HTML</title>
+<link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css">
+<script src="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+<style>
+.container {
+    width: 800px;
+}
+.main {
+  padding: 40px 15px;
+  text-align: center;
+}
+table {
+    width: 100%;
+    text-align: left;
+}
+.option {
+    width: 60px;
+    text-align: center;
+}
+input[type=radio] {
+    width: 100%;
+}
+td {
+    min-width: 20px;
+}
+</style>
+
+<div class="container"><div class="main">
+<form method="POST" target="#">
+
+<h1>Learner Questionnaire</h1>
+
+
+<section>
+<h2>About your training</h2>
+
+<table>
+<tr>
+<th></th>
+<th class="option">Strongly disagree</th>
+<th class="option">Disagree</th>
+<th class="option">Agree</th>
+<th class="option">Strongly agree</th>
+</tr>
+<tr>
+<td><label>I developed the skills expected from this training.</label></td>
+<td><input type="radio" name="skills-developed" value="strongly_disagree"></td>
+<td><input type="radio" name="skills-developed" value="disagree"></td>
+<td><input type="radio" name="skills-developed" value="agree"></td>
+<td><input type="radio" name="skills-developed" value="strongly_agree"></td>
+</tr>
+<tr>
+<td><label>I identified ways to build on my current knowledge and skills.</label></td>
+<td><input type="radio" name="identified-ways" value="strongly_disagree"></td>
+<td><input type="radio" name="identified-ways" value="disagree"></td>
+<td><input type="radio" name="identified-ways" value="agree"></td>
+<td><input type="radio" name="identified-ways" value="strongly_agree"></td>
+</tr>
+<tr>
+<td><label>The training focused on relevant skills.</label></td>
+<td><input type="radio" name="training-relevant" value="strongly_disagree"></td>
+<td><input type="radio" name="training-relevant" value="disagree"></td>
+<td><input type="radio" name="training-relevant" value="agree"></td>
+<td><input type="radio" name="training-relevant" value="strongly_agree"></td>
+</tr>
+<tr>
+<td><label>I developed the knowledge expected from this training.</label></td>
+<td><input type="radio" name="developed-knowledge" value="strongly_disagree"></td>
+<td><input type="radio" name="developed-knowledge" value="disagree"></td>
+<td><input type="radio" name="developed-knowledge" value="agree"></td>
+<td><input type="radio" name="developed-knowledge" value="strongly_agree"></td>
+</tr>
+<tr>
+<td><label>The training prepared me well for work.</label></td>
+<td><input type="radio" name="training-prepared" value="strongly_disagree"></td>
+<td><input type="radio" name="training-prepared" value="disagree"></td>
+<td><input type="radio" name="training-prepared" value="agree"></td>
+<td><input type="radio" name="training-prepared" value="strongly_agree"></td>
+</tr>
+<tr>
+<td><label>I set high standards for myself in this training.</label></td>
+<td><input type="radio" name="high-standards" value="strongly_disagree"></td>
+<td><input type="radio" name="high-standards" value="disagree"></td>
+<td><input type="radio" name="high-standards" value="agree"></td>
+<td><input type="radio" name="high-standards" value="strongly_agree"></td>
+</tr>
+<tr>
+<td><label>The training had a good mix of theory and practice.</label></td>
+<td><input type="radio" name="training-good-mix" value="strongly_disagree"></td>
+<td><input type="radio" name="training-good-mix" value="disagree"></td>
+<td><input type="radio" name="training-good-mix" value="agree"></td>
+<td><input type="radio" name="training-good-mix" value="strongly_agree"></td>
+</tr>
+<tr>
+<td><label>I looked for my own resources to help me learn.</label></td>
+<td><input type="radio" name="own-resources" value="strongly_disagree"></td>
+<td><input type="radio" name="own-resources" value="disagree"></td>
+<td><input type="radio" name="own-resources" value="agree"></td>
+<td><input type="radio" name="own-resources" value="strongly_agree"></td>
+</tr>
+<tr>
+<td><label>Overall, I am satisfied with the training.</label></td>
+<td><input type="radio" name="satisfied" value="strongly_disagree"></td>
+<td><input type="radio" name="satisfied" value="disagree"></td>
+<td><input type="radio" name="satisfied" value="agree"></td>
+<td><input type="radio" name="satisfied" value="strongly_agree"></td>
+</tr>
+<tr>
+<td><label>I would recommend the training organisation to others.</label></td>
+<td><input type="radio" name="recommend" value="strongly_disagree"></td>
+<td><input type="radio" name="recommend" value="disagree"></td>
+<td><input type="radio" name="recommend" value="agree"></td>
+<td><input type="radio" name="recommend" value="strongly_agree"></td>
+</tr>
+<tr>
+<td><label>Training organisation staff respected my background and needs.</label></td>
+<td><input type="radio" name="staff-respected" value="strongly_disagree"></td>
+<td><input type="radio" name="staff-respected" value="disagree"></td>
+<td><input type="radio" name="staff-respected" value="agree"></td>
+<td><input type="radio" name="staff-respected" value="strongly_agree"></td>
+</tr>
+<tr>
+<td><label>I pushed myself to understand things I found confusing.</label></td>
+<td><input type="radio" name="pushed-myself" value="strongly_disagree"></td>
+<td><input type="radio" name="pushed-myself" value="disagree"></td>
+<td><input type="radio" name="pushed-myself" value="agree"></td>
+<td><input type="radio" name="pushed-myself" value="strongly_agree"></td>
+</tr>
+<tr>
+<td><label>Trainers had an excellent knowledge of the subject content. </label></td>
+<td><input type="radio" name="trainers-excellent" value="strongly_disagree"></td>
+<td><input type="radio" name="trainers-excellent" value="disagree"></td>
+<td><input type="radio" name="trainers-excellent" value="agree"></td>
+<td><input type="radio" name="trainers-excellent" value="strongly_agree"></td>
+</tr>
+<tr>
+<td><label>I received useful feedback on my assessments.</label></td>
+<td><input type="radio" name="useful-feedback" value="strongly_disagree"></td>
+<td><input type="radio" name="useful-feedback" value="disagree"></td>
+<td><input type="radio" name="useful-feedback" value="agree"></td>
+<td><input type="radio" name="useful-feedback" value="strongly_agree"></td>
+</tr>
+<tr>
+<td><label>The way I was assessed was a fair test of my skills and knowledge. </label></td>
+<td><input type="radio" name="assessed-fair" value="strongly_disagree"></td>
+<td><input type="radio" name="assessed-fair" value="disagree"></td>
+<td><input type="radio" name="assessed-fair" value="agree"></td>
+<td><input type="radio" name="assessed-fair" value="strongly_agree"></td>
+</tr>
+<tr>
+<td><label>I learned to work with people.</label></td>
+<td><input type="radio" name="learned-people" value="strongly_disagree"></td>
+<td><input type="radio" name="learned-people" value="disagree"></td>
+<td><input type="radio" name="learned-people" value="agree"></td>
+<td><input type="radio" name="learned-people" value="strongly_agree"></td>
+</tr>
+<tr>
+<td><label>The training was at the right level of difficulty for me. </label></td>
+<td><input type="radio" name="right-level" value="strongly_disagree"></td>
+<td><input type="radio" name="right-level" value="disagree"></td>
+<td><input type="radio" name="right-level" value="agree"></td>
+<td><input type="radio" name="right-level" value="strongly_agree"></td>
+</tr>
+<tr>
+<td><label>The amount of work I had to do was reasonable. </label></td>
+<td><input type="radio" name="amount-reasonable" value="strongly_disagree"></td>
+<td><input type="radio" name="amount-reasonable" value="disagree"></td>
+<td><input type="radio" name="amount-reasonable" value="agree"></td>
+<td><input type="radio" name="amount-reasonable" value="strongly_agree"></td>
+</tr>
+<tr>
+<td><label>Assessments were based on realistic activities.</label></td>
+<td><input type="radio" name="assessments-realistic" value="strongly_disagree"></td>
+<td><input type="radio" name="assessments-realistic" value="disagree"></td>
+<td><input type="radio" name="assessments-realistic" value="agree"></td>
+<td><input type="radio" name="assessments-realistic" value="strongly_agree"></td>
+</tr>
+<tr>
+<td><label>It was always easy to know the standards expected.</label></td>
+<td><input type="radio" name="easy-standards" value="strongly_disagree"></td>
+<td><input type="radio" name="easy-standards" value="disagree"></td>
+<td><input type="radio" name="easy-standards" value="agree"></td>
+<td><input type="radio" name="easy-standards" value="strongly_agree"></td>
+</tr>
+<tr>
+<td><label>Training facilities and materials were in good condition.</label></td>
+<td><input type="radio" name="good-condition" value="strongly_disagree"></td>
+<td><input type="radio" name="good-condition" value="disagree"></td>
+<td><input type="radio" name="good-condition" value="agree"></td>
+<td><input type="radio" name="good-condition" value="strongly_agree"></td>
+</tr>
+<tr>
+<td><label>I usually had a clear idea of what was expected of me.</label></td>
+<td><input type="radio" name="clear-idea" value="strongly_disagree"></td>
+<td><input type="radio" name="clear-idea" value="disagree"></td>
+<td><input type="radio" name="clear-idea" value="agree"></td>
+<td><input type="radio" name="clear-idea" value="strongly_agree"></td>
+</tr>
+<tr>
+<td><label>Trainers explained things clearly.</label></td>
+<td><input type="radio" name="explained-clearly" value="strongly_disagree"></td>
+<td><input type="radio" name="explained-clearly" value="disagree"></td>
+<td><input type="radio" name="explained-clearly" value="agree"></td>
+<td><input type="radio" name="explained-clearly" value="strongly_agree"></td>
+</tr>
+<tr>
+<td><label>The training organisation had a range of services to support learners.</label></td>
+<td><input type="radio" name="range-of-services" value="strongly_disagree"></td>
+<td><input type="radio" name="range-of-services" value="disagree"></td>
+<td><input type="radio" name="range-of-services" value="agree"></td>
+<td><input type="radio" name="range-of-services" value="strongly_agree"></td>
+</tr>
+<tr>
+<td><label>I learned to plan and manage my work.</label></td>
+<td><input type="radio" name="learned-to-plan" value="strongly_disagree"></td>
+<td><input type="radio" name="learned-to-plan" value="disagree"></td>
+<td><input type="radio" name="learned-to-plan" value="agree"></td>
+<td><input type="radio" name="learned-to-plan" value="strongly_agree"></td>
+</tr>
+<tr>
+<td><label>The training used up-to-date equipment, facilities and materials.</label></td>
+<td><input type="radio" name="training-up-to-date" value="strongly_disagree"></td>
+<td><input type="radio" name="training-up-to-date" value="disagree"></td>
+<td><input type="radio" name="training-up-to-date" value="agree"></td>
+<td><input type="radio" name="training-up-to-date" value="strongly_agree"></td>
+</tr>
+<tr>
+<td><label>I approached trainers if I needed help.</label></td>
+<td><input type="radio" name="approached-trainers" value="strongly_disagree"></td>
+<td><input type="radio" name="approached-trainers" value="disagree"></td>
+<td><input type="radio" name="approached-trainers" value="agree"></td>
+<td><input type="radio" name="approached-trainers" value="strongly_agree"></td>
+</tr>
+<tr>
+<td><label>Trainers made the subject as interesting as possible.</label></td>
+<td><input type="radio" name="subject-interesting" value="strongly_disagree"></td>
+<td><input type="radio" name="subject-interesting" value="disagree"></td>
+<td><input type="radio" name="subject-interesting" value="agree"></td>
+<td><input type="radio" name="subject-interesting" value="strongly_agree"></td>
+</tr>
+<tr>
+<td><label>I would recommend the training to others.</label></td>
+<td><input type="radio" name="would-recommend" value="strongly_disagree"></td>
+<td><input type="radio" name="would-recommend" value="disagree"></td>
+<td><input type="radio" name="would-recommend" value="agree"></td>
+<td><input type="radio" name="would-recommend" value="strongly_agree"></td>
+</tr>
+<tr>
+<td><label>The training organisation gave appropriate recognition of existing knowledge and skills.</label></td>
+<td><input type="radio" name="appropriate-recognition" value="strongly_disagree"></td>
+<td><input type="radio" name="appropriate-recognition" value="disagree"></td>
+<td><input type="radio" name="appropriate-recognition" value="agree"></td>
+<td><input type="radio" name="appropriate-recognition" value="strongly_agree"></td>
+</tr>
+<tr>
+<td><label>Training resources were available when I needed them.</label></td>
+<td><input type="radio" name="resources-available" value="strongly_disagree"></td>
+<td><input type="radio" name="resources-available" value="disagree"></td>
+<td><input type="radio" name="resources-available" value="agree"></td>
+<td><input type="radio" name="resources-available" value="strongly_agree"></td>
+</tr>
+<tr>
+<td><label>I was given enough material to keep up my interest.</label></td>
+<td><input type="radio" name="enough-material" value="strongly_disagree"></td>
+<td><input type="radio" name="enough-material" value="disagree"></td>
+<td><input type="radio" name="enough-material" value="agree"></td>
+<td><input type="radio" name="enough-material" value="strongly_agree"></td>
+</tr>
+<tr>
+<td><label>The training was flexible enough to meet my needs.</label></td>
+<td><input type="radio" name="training-flexible" value="strongly_disagree"></td>
+<td><input type="radio" name="training-flexible" value="disagree"></td>
+<td><input type="radio" name="training-flexible" value="agree"></td>
+<td><input type="radio" name="training-flexible" value="strongly_agree"></td>
+</tr>
+<tr>
+<td><label>Trainers encouraged learners to ask questions.</label></td>
+<td><input type="radio" name="trainers-encouraged" value="strongly_disagree"></td>
+<td><input type="radio" name="trainers-encouraged" value="disagree"></td>
+<td><input type="radio" name="trainers-encouraged" value="agree"></td>
+<td><input type="radio" name="trainers-encouraged" value="strongly_agree"></td>
+</tr>
+<tr>
+<td><label>Trainers made it clear right from the start what they expected from me</label></td>
+<td><input type="radio" name="trainers-clear" value="strongly_disagree"></td>
+<td><input type="radio" name="trainers-clear" value="disagree"></td>
+<td><input type="radio" name="trainers-clear" value="agree"></td>
+<td><input type="radio" name="trainers-clear" value="strongly_agree"></td>
+</tr>
+</table>
+
+<hr>
+
+<div>
+<label>What were the BEST ASPECTS of the training?</label>
+<br>
+<textarea name="best-aspects" rows="4" cols="60"></textarea>
+</div>
+
+<hr>
+
+<div>
+<label>What aspects of the training were MOST IN NEED OF IMPROVEMENT?</label>
+<br>
+<textarea name="most-in-need" rows="4" cols="60"></textarea>
+</div>
+
+<hr>
+</section>
+
+<section>
+<h2>Your training details</h2>
+
+<div>
+<label>What TYPE OF QUALIFICATION are you currently enrolled in? Select one only.</label>
+<br>
+<table>
+<tr>
+<td><label>Certificate I</label></td>
+<td><input type="radio" name="type-of-qualification" value="certificate-i"></td>
+</tr>
+<tr>
+<td><label>Certificate II</label></td>
+<td><input type="radio" name="type-of-qualification" value="certificate-ii"></td>
+</tr>
+<tr>
+<td><label>Certificate III</label></td>
+<td><input type="radio" name="type-of-qualification" value="certificate-iii"></td>
+</tr>
+<tr>
+<td><label>Certificate IV</label></td>
+<td><input type="radio" name="type-of-qualification" value="certificate-iv"></td>
+</tr>
+<tr>
+<td><label>Certificate level unknown</label></td>
+<td><input type="radio" name="type-of-qualification" value="certificate-unknown"></td>
+</tr>
+<tr>
+<td><label>Diploma</label></td>
+<td><input type="radio" name="type-of-qualification" value="diploma"></td>
+</tr>
+<tr>
+<td><label>Advanced diploma</label></td>
+<td><input type="radio" name="type-of-qualification" value="advanced-diploma"></td>
+</tr>
+<tr>
+<td><label>Associate degree</label></td>
+<td><input type="radio" name="type-of-qualification" value="associate-degree"></td>
+</tr>
+<tr>
+<td><label>Degree</label></td>
+<td><input type="radio" name="type-of-qualification" value="degree"></td>
+</tr>
+<tr>
+<td><label>Short course or statement of attainment</label></td>
+<td><input type="radio" name="type-of-qualification" value="short-course"></td>
+</tr>
+<tr>
+<td><label>VET graduate certificate or graduate diploma</label></td>
+<td><input type="radio" name="type-of-qualification" value="vet-graduate"></td>
+</tr>
+<tr>
+<td><label>Other qualification or training</label></td>
+<td><input type="radio" name="type-of-qualification" value="other"></td>
+</tr>
+<tr>
+<td><label>Do not know</label></td>
+<td><input type="radio" name="type-of-qualification" value="do-not-know"></td>
+</tr>
+</table>
+</div>
+
+<hr>
+
+<div>
+<label>What is the BROAD FIELD of your current training? Select one only.</label>
+<br>
+<table>
+<tr>
+<td><label>Natural and physical sciences</label></td>
+<td><input type="radio" name="broad-field" value="natural-sciences"></td>
+</tr>
+<tr>
+<td><label>Information technology</label></td>
+<td><input type="radio" name="broad-field" value="information-technology"></td>
+</tr>
+<tr>
+<td><label>Engineering and related technologies</label></td>
+<td><input type="radio" name="broad-field" value="engineering"></td>
+</tr>
+<tr>
+<td><label>Architecture and building</label></td>
+<td><input type="radio" name="broad-field" value="architecture"></td>
+</tr>
+<tr>
+<td><label>Agriculture, environmental and related studies</label></td>
+<td><input type="radio" name="broad-field" value="agriculture"></td>
+</tr>
+<tr>
+<td><label>Health</label></td>
+<td><input type="radio" name="broad-field" value="health"></td>
+</tr>
+<tr>
+<td><label>Education</label></td>
+<td><input type="radio" name="broad-field" value="education"></td>
+</tr>
+<tr>
+<td><label>Management and commerce</label></td>
+<td><input type="radio" name="broad-field" value="management"></td>
+</tr>
+<tr>
+<td><label>Society and culture</label></td>
+<td><input type="radio" name="broad-field" value="society"></td>
+</tr>
+<tr>
+<td><label>Creative arts</label></td>
+<td><input type="radio" name="broad-field" value="arts"></td>
+</tr>
+<tr>
+<td><label>Food, hospitality and personal services</label></td>
+<td><input type="radio" name="broad-field" value="food"></td>
+</tr>
+<tr>
+<td><label>Other</label></td>
+<td><input type="radio" name="broad-field" value="other"></td>
+</tr>
+</table>
+</div>
+
+<hr>
+
+<div>
+<label>What is the FULL TITLE of your current qualification or training?</label>
+<br>
+<input type="text" name="full-title">
+</div>
+
+<div>
+<label>In what MONTH AND YEAR did you start your current training?</label>
+<br>
+<span>For example, write ‘March 2007’ as ‘03/2007’.</span>
+<br>
+<input type="month" name="month-and-year">
+</div>
+
+<hr>
+
+<table>
+<tr>
+<th></th>
+<th class="option">Yes</th>
+<th class="option">No</th>
+</tr>
+<tr>
+<td><label>Are you undertaking an APPRENTICESHIP OR TRAINEESHIP?</label></td>
+<td><input type="radio" name="apprenticeship" value="yes"></td>
+<td><input type="radio" name="apprenticeship" value="no"></td>
+</tr>
+<tr>
+<td><label>Did you get any RECOGNITION OF PRIOR LEARNING towards your training such as subject exemptions, course credits or advanced standing?</label></td>
+<td><input type="radio" name="recognition-of-prior" value="yes"></td>
+<td><input type="radio" name="recognition-of-prior" value="no"></td>
+</tr>
+</table>
+
+<hr>
+</section>
+
+<section>
+<h2>About you</h2>
+
+<table>
+<tr>
+<th></th>
+<th class="option">Female</th>
+<th class="option">Male</th>
+</tr>
+<tr>
+<td><label>Are you FEMALE OR MALE?</label></td>
+<td><input type="radio" name="gender" value="female"></td>
+<td><input type="radio" name="gender" value="male"></td>
+</tr>
+</table>
+
+<hr>
+
+<div>
+<label>What is YOUR AGE in years?</label>
+<br>
+<table>
+<tr>
+<td><label>Under 15</label></td>
+<td><input type="radio" name="age" value="under-15"></td>
+</tr>
+<tr>
+<td><label>15 to 19</label></td>
+<td><input type="radio" name="age" value="15-19"></td>
+</tr>
+<tr>
+<td><label>20 to 24</label></td>
+<td><input type="radio" name="age" value="20-24"></td>
+</tr>
+<tr>
+<td><label>25 to 34</label></td>
+<td><input type="radio" name="age" value="25-34"></td>
+</tr>
+<tr>
+<td><label>35 to 44</label></td>
+<td><input type="radio" name="age" value="35-44"></td>
+</tr>
+<tr>
+<td><label>45 to 54</label></td>
+<td><input type="radio" name="age" value="45-54"></td>
+</tr>
+<tr>
+<td><label>55 to 64</label></td>
+<td><input type="radio" name="age" value="55-64"></td>
+</tr>
+<tr>
+<td><label>65 or over</label></td>
+<td><input type="radio" name="age" value="65-over"></td>
+</tr>
+</table>
+</div>
+
+<hr>
+
+<div>
+<label>Are you of ABORIGINAL OR TORRES STRAIT ISLANDER origin?</label>
+<br>
+<table>
+<tr>
+<td><label>No</label></td>
+<td><input type="radio" name="aboriginal" value="no"></td>
+</tr>
+<tr>
+<td><label>Yes, Aboriginal</label></td>
+<td><input type="radio" name="aboriginal" value="yes-aboriginal"></td>
+</tr>
+<tr>
+<td><label>Yes, Torres Strait Islander</label></td>
+<td><input type="radio" name="aboriginal" value="yes-torres-strait"></td>
+</tr>
+<tr>
+<td><label>Yes, both Aboriginal and Torres Strait Islander</label></td>
+<td><input type="radio" name="aboriginal" value="yes-both"></td>
+</tr>
+</table>
+</div>
+
+<hr>
+
+<table>
+<tr>
+<th></th>
+<th class="option">Yes</th>
+<th class="option">No</th>
+</tr>
+<tr>
+<td><label>Do you speak a LANGUAGE OTHER THAN ENGLISH at home?</label></td>
+<td><input type="radio" name="other-language" value="yes"></td>
+<td><input type="radio" name="other-language" value="no"></td>
+</tr>
+<tr>
+<td><label>Are you a PERMANENT RESIDENT OR CITIZEN of Australia?</label></td>
+<td><input type="radio" name="citizen-of-australia" value="yes"></td>
+<td><input type="radio" name="citizen-of-australia" value="no"></td>
+</tr>
+<tr>
+<td><label>Do you consider yourself to have a DISABILITY, IMPAIRMENT, OR LONG-TERM CONDITION?</label></td>
+<td><input type="radio" name="disability" value="yes"></td>
+<td><input type="radio" name="disability" value="no"></td>
+</tr>
+</table>
+
+<hr>
+
+<div>
+<label>What is the POSTCODE of your main place of residence?</label>
+<br>
+<input type="text" name="postcode">
+</div>
+
+<hr>
+</section>
+
+</form>
+
+<br><br>
+<p>Thank you for sharing your views.</p>
+</div></div>
