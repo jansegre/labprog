@@ -33,6 +33,11 @@
 \usepackage{graphicx}			% Inclusão de gráficos
 \usepackage{algorithm2e}		% Para escrever algorítimos
 \usepackage{listings}
+
+% configurando o pacote listings
+% ref: http://en.wikibooks.org/wiki/LaTeX/Source_Code_Listings#Settings
+\lstset{frame=single,breaklines=true}
+
 % o seguinte é necessário para corrigir um bug no algorithm2e
 % http://tex.stackexchange.com/questions/113325/problem-with-algorithm2e-and-portuguese-option
 \SetKwFor{Para}{para}{fa\c{c}a}{fim para}
@@ -48,6 +53,7 @@
 \local{Rio de Janeiro}
 \data{Março de 2014}
 \orientador{Maj Anderson}
+
 \instituicao{
   Instituto Militar de Engenharia
   \par
@@ -105,7 +111,7 @@
 % ----------------------------------------------------------
 \textual
 
-\lstinputlisting[language=Java,frame=single,breaklines=true]{../src/main/java/com/jansegre/labprog3/validator/Validator.java}
+\lstinputlisting[language=Java]{../src/main/java/com/jansegre/labprog3/validator/Validator.java}
 %\begin{lstlisting}
 %\end{lstlisting}
 
